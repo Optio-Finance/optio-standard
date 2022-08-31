@@ -1,0 +1,7 @@
+{
+  "cairo.cairoFormatPath": "/Users/azat/cairo-venv/bin/cairo-format",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "prettier.printWidth": 80
+}
