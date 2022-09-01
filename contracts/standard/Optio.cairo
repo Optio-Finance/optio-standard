@@ -52,8 +52,8 @@ end
 
 @external
 func transferFrom{
-        syscall_ptr: felt*,
-        pedersen_ptr: HashBuiltin*,
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
         range_check_ptr
     }(
         _from : felt,
@@ -85,8 +85,8 @@ end
 
 @external
 func transferAllowanceFrom{
-        syscall_ptr: felt*,
-        pedersen_ptr: HashBuiltin*,
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
         range_check_ptr
     }(
         _from : felt,
@@ -119,11 +119,11 @@ end
 
 @external
 func issue{
-        syscall_ptr: felt*,
-        pedersen_ptr: HashBuiltin*,
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
         range_check_ptr
     }(
-        _to: felt,
+        _to : felt,
         _transactions_len : felt,
         _transactions : Transaction*
     ):
@@ -146,11 +146,11 @@ end
 
 @external
 func redeem{
-        syscall_ptr: felt*,
-        pedersen_ptr: HashBuiltin*,
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
         range_check_ptr
     }(
-        _from: felt,
+        _from : felt,
         _transactions_len : felt,
         _transactions : Transaction*
     ):
@@ -173,11 +173,11 @@ end
 
 @external
 func burn{
-        syscall_ptr: felt*,
-        pedersen_ptr: HashBuiltin*,
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
         range_check_ptr
     }(
-        _from: felt,
+        _from : felt,
         _transactions_len : felt,
         _transactions : Transaction*
     ):
@@ -196,4 +196,56 @@ func burn{
     Burn.emit(caller, _from, _transactions_len, _transactions)
 
     return ()
+end
+
+
+#
+## Getters
+#
+
+@view
+func balanceOf{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        account : felt,
+        class_id : felt,
+        unit_id : felt
+    ) -> (balance : felt):
+    with_attr error_message("balanceOf: balance query for zero address"):
+        assert_not_zero(account)
+    end
+
+    let (balance : felt) = _balance_of(
+        account=account,
+        class_id=class_id,
+        unit_id=unit_id
+    )
+    return (balance)
+end
+
+@view
+func allowance{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        owner : felt,
+        spender : felt,
+        class_id : felt,
+        unit_id : felt
+    ) -> (remaining : felt):
+    with_attr error_message("allowance: query for zero address"):
+        assert_not_zero(owner)
+        assert_not_zero(spender)
+    end
+
+    let (remaining : felt) = _allowance(
+        owner=owner,
+        spender=spender,
+        class_id=class_id,
+        unit_id=unit_id
+    )
+    return (remaining)
 end

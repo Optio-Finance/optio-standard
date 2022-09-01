@@ -212,3 +212,25 @@ func _burn{
     )
     return ()
 end
+
+
+func _balance_of(
+        account : felt,
+        class_id : felt,
+        unit_id : felt
+    ) -> (balance : felt):
+    # TODO class and unit checks
+    let (balance) = _balances.read(account)
+    return (balance)
+end
+
+func _allowance(
+        owner : felt,
+        spender : felt,
+        class_id : felt,
+        unit_id : felt,
+    ):
+    # TODO class and unit checks
+    let (remaining) = _allowances.read(owner, spender)
+    return (remaining)
+end
