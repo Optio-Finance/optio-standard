@@ -27,7 +27,9 @@ from contracts.standard.library import (
     _balance_of,
     _allowance,
     _get_class_metadata,
-    _get_unit_metadata
+    _get_unit_metadata,
+    _get_class_data,
+    _get_unit_data
 )
 
 
@@ -281,4 +283,26 @@ func getUnitMetadata{
     # TODO check if unitMetadata exists
     let (unitMetadata : UnitMetadata) = _get_unit_metadata(class_id, unit_id)
     return (unitMetadata)
+end
+
+@external
+func getClassData{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(class_id : felt) -> (classData : Class):
+    # TODO check if class exists
+    let (classData : Class) = _get_class_data(class_id)
+    return (classData)
+end
+
+@external
+func getUnitData{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(class_id : felt, unit_id : felt) -> (unitData : Unit):
+    # TODO check if class and unit exist
+    let (unitData : Unit) = _get_unit_data(class_id, unit_id)
+    return (unitData)
 end

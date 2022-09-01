@@ -275,3 +275,21 @@ func _get_unit_metadata{
     let (unitMetadata) = _unitMetadata.read(class_id, unit_id)
     return (unitMetadata)
 end
+
+func _get_class_data{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(class_id : felt) -> (classData : Class):
+    let (classData : Class) = _classes.read(class_id)
+    return (classData)
+end
+
+func _get_unit_data{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(class_id : felt, unit_id : felt) -> (unitData : Unit):
+    let (unitData : Unit) = _units.read(class_id, unit_id)
+    return (unitData)
+end
