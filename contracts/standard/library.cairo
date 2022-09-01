@@ -252,3 +252,26 @@ func _allowance{
     let (remaining) = _allowances.read(owner, spender)
     return (remaining)
 end
+
+func _get_class_metadata{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_id : felt
+    ) -> (classMetadata : ClassMetadata):
+    let (classMetadata) = _classMetadata.read(class_id)
+    return (classMetadata)
+end
+
+func _get_unit_metadata{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_id : felt,
+        unit_id : felt
+    ) -> (unitMetadata : UnitMetadata):
+    let (unitMetadata) = _unitMetadata.read(class_id, unit_id)
+    return (unitMetadata)
+end

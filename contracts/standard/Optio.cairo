@@ -25,7 +25,9 @@ from contracts.standard.library import (
     _redeem,
     _burn,
     _balance_of,
-    _allowance
+    _allowance,
+    _get_class_metadata,
+    _get_unit_metadata
 )
 
 
@@ -252,4 +254,31 @@ func allowance{
         unit_id=unit_id
     )
     return (remaining)
+end
+
+@view
+func getClassMetadata{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_id : felt
+    ) -> (classMetadata : ClassMetadata):
+    # TODO check if classMetadata exists
+    let (classMetadata : ClassMetadata) = _get_class_metadata(class_id)
+    return (classMetadata)
+end
+
+@view
+func getUnitMetadata{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_id : felt,
+        unit_id : felt
+    ) -> (unitMetadata : UnitMetadata):
+    # TODO check if unitMetadata exists
+    let (unitMetadata : UnitMetadata) = _get_unit_metadata(class_id, unit_id)
+    return (unitMetadata)
 end
