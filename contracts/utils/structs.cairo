@@ -3,6 +3,7 @@
 
 struct ClassMetadata:
     member class_id : felt
+    member metadata_id : felt
     member name : felt
     member type : felt
     member description : felt
@@ -11,16 +12,19 @@ end
 struct UnitMetadata:
     member class_id : felt
     member unit_id : felt
+    member metadata_id : felt
     member name : felt
     member type : felt
     member description : felt
 end
 
 struct Values:
-    member uintValue : felt
-    member stringValue : felt
-    member addressValue : felt
-    member boolValue : felt
+    member uint : felt
+    member string : felt
+    member address : felt
+    member boolean : felt
+    member timestamp : felt
+    member uri : felt
 end
 
 struct Class:
