@@ -15,6 +15,8 @@ from starkware.starknet.common.syscalls import (
 from contracts.utils.structs import (
     ClassMetadata,
     UnitMetadata,
+    Class,
+    Unit,
     Transaction
 )
 
@@ -24,11 +26,11 @@ from contracts.utils.structs import (
 #
 
 @storage_var
-func classes(class_id : felt) -> (class : ClassMetadata):
+func _classes(class_id : felt) -> (class : Class):
 end
 
 @storage_var
-func units(class_id : felt, unit_id : felt) -> (unit : UnitMetadata):
+func _units(class_id : felt, unit_id : felt) -> (unit : Unit):
 end
 
 @storage_var
@@ -41,6 +43,14 @@ end
 
 @storage_var
 func _balances(address : felt) -> (amount : felt):
+end
+
+@storage_var
+func _classMetadata(class_id : felt) -> (classMetadata : ClassMetadata):
+end
+
+@storage_var
+func _unitMetadata(class_id : felt, unit_id : felt) -> (unitMetadata : UnitMetadata):
 end
 
 
@@ -214,7 +224,11 @@ func _burn{
 end
 
 
-func _balance_of(
+func _balance_of{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
         account : felt,
         class_id : felt,
         unit_id : felt
@@ -224,12 +238,16 @@ func _balance_of(
     return (balance)
 end
 
-func _allowance(
+func _allowance{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
         owner : felt,
         spender : felt,
         class_id : felt,
         unit_id : felt,
-    ):
+    ) -> (remaining : felt):
     # TODO class and unit checks
     let (remaining) = _allowances.read(owner, spender)
     return (remaining)

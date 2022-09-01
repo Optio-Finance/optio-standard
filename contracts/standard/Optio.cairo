@@ -14,6 +14,8 @@ from starkware.starknet.common.syscalls import (
 from contracts.utils.structs import (
     ClassMetadata,
     UnitMetadata,
+    Class,
+    Unit,
     Transaction
 )
 from contracts.standard.library import (
@@ -21,7 +23,9 @@ from contracts.standard.library import (
     _transfer_allowance_from,
     _issue,
     _redeem,
-    _burn
+    _burn,
+    _balance_of,
+    _allowance
 )
 
 
