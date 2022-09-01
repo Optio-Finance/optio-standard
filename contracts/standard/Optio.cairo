@@ -14,6 +14,7 @@ from starkware.starknet.common.syscalls import (
 from contracts.utils.structs import (
     ClassMetadata,
     UnitMetadata,
+    Values,
     Class,
     Unit,
     Transaction
@@ -264,10 +265,11 @@ func getClassMetadata{
         pedersen_ptr : HashBuiltin*,
         range_check_ptr
     }(
-        class_id : felt
+        class_id : felt,
+        metadata_id : felt,
     ) -> (classMetadata : ClassMetadata):
     # TODO check if classMetadata exists
-    let (classMetadata : ClassMetadata) = _get_class_metadata(class_id)
+    let (classMetadata : ClassMetadata) = _get_class_metadata(class_id, metadata_id)
     return (classMetadata)
 end
 
@@ -278,10 +280,11 @@ func getUnitMetadata{
         range_check_ptr
     }(
         class_id : felt,
-        unit_id : felt
+        unit_id : felt,
+        metadata_id : felt
     ) -> (unitMetadata : UnitMetadata):
     # TODO check if unitMetadata exists
-    let (unitMetadata : UnitMetadata) = _get_unit_metadata(class_id, unit_id)
+    let (unitMetadata : UnitMetadata) = _get_unit_metadata(class_id, unit_id, metadata_id)
     return (unitMetadata)
 end
 
@@ -290,9 +293,12 @@ func getClassData{
         syscall_ptr : felt*,
         pedersen_ptr : HashBuiltin*,
         range_check_ptr
-    }(class_id : felt) -> (classData : Class):
+    }(
+        class_id : felt,
+        metadata_id : felt
+    ) -> (classData : Values):
     # TODO check if class exists
-    let (classData : Class) = _get_class_data(class_id)
+    let (classData : Values) = _get_class_data(class_id, metadata_id)
     return (classData)
 end
 
@@ -301,8 +307,12 @@ func getUnitData{
         syscall_ptr : felt*,
         pedersen_ptr : HashBuiltin*,
         range_check_ptr
-    }(class_id : felt, unit_id : felt) -> (unitData : Unit):
+    }(
+        class_id : felt,
+        unit_id : felt,
+        metadata_id : felt
+    ) -> (unitData : Values):
     # TODO check if class and unit exist
-    let (unitData : Unit) = _get_unit_data(class_id, unit_id)
+    let (unitData : Values) = _get_unit_data(class_id, unit_id, metadata_id)
     return (unitData)
 end

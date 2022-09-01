@@ -15,6 +15,7 @@ from starkware.starknet.common.syscalls import (
 from contracts.utils.structs import (
     ClassMetadata,
     UnitMetadata,
+    Values,
     Class,
     Unit,
     Transaction
@@ -26,11 +27,19 @@ from contracts.utils.structs import (
 #
 
 @storage_var
-func _classes(class_id : felt) -> (class : Class):
+func _classMetadata(class_id : felt, metadata_id : felt) -> (classMetadata : ClassMetadata):
 end
 
 @storage_var
-func _units(class_id : felt, unit_id : felt) -> (unit : Unit):
+func _classes(class_id : felt, metadata_id : felt) -> (class : Values):
+end
+
+@storage_var
+func _unitMetadata(class_id : felt, unit_id : felt, metadata_id : felt) -> (unitMetadata : UnitMetadata):
+end
+
+@storage_var
+func _units(class_id : felt, unit_id : felt, metadata_id : felt) -> (unit : Values):
 end
 
 @storage_var
@@ -43,14 +52,6 @@ end
 
 @storage_var
 func _balances(address : felt) -> (amount : felt):
-end
-
-@storage_var
-func _classMetadata(class_id : felt) -> (classMetadata : ClassMetadata):
-end
-
-@storage_var
-func _unitMetadata(class_id : felt, unit_id : felt) -> (unitMetadata : UnitMetadata):
 end
 
 
@@ -258,9 +259,10 @@ func _get_class_metadata{
         pedersen_ptr : HashBuiltin*,
         range_check_ptr
     }(
-        class_id : felt
+        class_id : felt,
+        metadata_id : felt
     ) -> (classMetadata : ClassMetadata):
-    let (classMetadata) = _classMetadata.read(class_id)
+    let (classMetadata) = _classMetadata.read(class_id, metadata_id)
     return (classMetadata)
 end
 
@@ -270,9 +272,10 @@ func _get_unit_metadata{
         range_check_ptr
     }(
         class_id : felt,
-        unit_id : felt
+        unit_id : felt,
+        metadata_id : felt
     ) -> (unitMetadata : UnitMetadata):
-    let (unitMetadata) = _unitMetadata.read(class_id, unit_id)
+    let (unitMetadata) = _unitMetadata.read(class_id, unit_id, metadata_id)
     return (unitMetadata)
 end
 
@@ -280,8 +283,11 @@ func _get_class_data{
         syscall_ptr : felt*,
         pedersen_ptr : HashBuiltin*,
         range_check_ptr
-    }(class_id : felt) -> (classData : Class):
-    let (classData : Class) = _classes.read(class_id)
+    }(
+        class_id : felt,
+        metadata_id : felt
+    ) -> (classData : Values):
+    let (classData : Values) = _classes.read(class_id, metadata_id)
     return (classData)
 end
 
@@ -289,7 +295,11 @@ func _get_unit_data{
         syscall_ptr : felt*,
         pedersen_ptr : HashBuiltin*,
         range_check_ptr
-    }(class_id : felt, unit_id : felt) -> (unitData : Unit):
-    let (unitData : Unit) = _units.read(class_id, unit_id)
+    }(
+        class_id : felt,
+        unit_id : felt,
+        metadata_id : felt
+    ) -> (unitData : Values):
+    let (unitData : Values) = _units.read(class_id, unit_id, metadata_id)
     return (unitData)
 end
