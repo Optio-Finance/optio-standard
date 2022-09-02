@@ -27,279 +27,300 @@ from contracts.utils.structs import (
 #
 
 @storage_var
-func _classMetadata(class_id : felt, metadata_id : felt) -> (classMetadata : ClassMetadata):
+func classMetadata(class_id : felt, metadata_id : felt) -> (classMetadata : ClassMetadata):
 end
 
 @storage_var
-func _classes(class_id : felt, metadata_id : felt) -> (class : Values):
+func classes(class_id : felt, metadata_id : felt) -> (class : Values):
 end
 
 @storage_var
-func _unitMetadata(class_id : felt, unit_id : felt, metadata_id : felt) -> (unitMetadata : UnitMetadata):
+func unitMetadata(class_id : felt, unit_id : felt, metadata_id : felt) -> (unitMetadata : UnitMetadata):
 end
 
 @storage_var
-func _units(class_id : felt, unit_id : felt, metadata_id : felt) -> (unit : Values):
+func units(class_id : felt, unit_id : felt, metadata_id : felt) -> (unit : Values):
 end
 
 @storage_var
-func _operator_approvals(address : felt, operator : felt) -> (approved : felt):
+func operator_approvals(address : felt, operator : felt) -> (approved : felt):
 end
 
 @storage_var
-func _balances(address : felt, class_id : felt, unit_id : felt) -> (amount : felt):
+func balances(address : felt, class_id : felt, unit_id : felt) -> (amount : felt):
 end
 
 @storage_var
-func _allowances(address : felt, class_id : felt, unit_id : felt, spender : felt) -> (amount : felt):
+func allowances(address : felt, class_id : felt, unit_id : felt, spender : felt) -> (amount : felt):
+end
+
+@storage_var
+func name() -> (name : felt):
+end
+
+@storage_var
+func asset() -> (asset : felt):
 end
 
 
-#
-## Internals
-#
-
-func _transfer_from{
-        syscall_ptr: felt*,
-        pedersen_ptr: HashBuiltin*,
-        range_check_ptr
-    }(
-        sender : felt,
-        recipient : felt,
-        transaction_index : felt,
-        transactions_len : felt,
-        transactions : Transaction*
-    ):
-    if transaction_index == transactions_len:
+namespace OPTIO:
+    #
+    # Constructor
+    #
+    func initialize{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            _name : felt,
+            _asset : felt,
+        ):
+        name.write(_name)
+        asset.write(_asset)
         return ()
     end
 
-    tempvar transaction = transactions[transaction_index]
-    let (balance_sender) = _balances.read(sender, transaction.class_id, transaction.unit_id)
-    let (balance_recipient) = _balances.read(recipient, transaction.class_id, transaction.unit_id)
+    func transfer_from{
+            syscall_ptr: felt*,
+            pedersen_ptr: HashBuiltin*,
+            range_check_ptr
+        }(
+            sender : felt,
+            recipient : felt,
+            transaction_index : felt,
+            transactions_len : felt,
+            transactions : Transaction*
+        ):
+        if transaction_index == transactions_len:
+            return ()
+        end
 
-    with_attr error_message("_transfer_from: not enough funds to transfer, got sender's balance {balance_sender}"):
-        assert_le(balance_sender, transaction.amount)
-    end
+        tempvar transaction = transactions[transaction_index]
+        let (balance_sender) = balances.read(sender, transaction.class_id, transaction.unit_id)
+        let (balance_recipient) = balances.read(recipient, transaction.class_id, transaction.unit_id)
 
-    _balances.write(sender, transaction.class_id, transaction.unit_id, balance_sender - transaction.amount)
-    _balances.write(recipient, transaction.class_id, transaction.unit_id, balance_recipient + transaction.amount)
+        with_attr error_message("_transfer_from: not enough funds to transfer, got sender's balance {balance_sender}"):
+            assert_le(balance_sender, transaction.amount)
+        end
 
-    _transfer_from(
-        sender=sender,
-        recipient=recipient,
-        transaction_index=transaction_index + 1,
-        transactions_len=transactions_len,
-        transactions=transactions
-    )
-    return ()
-end
+        balances.write(sender, transaction.class_id, transaction.unit_id, balance_sender - transaction.amount)
+        balances.write(recipient, transaction.class_id, transaction.unit_id, balance_recipient + transaction.amount)
 
-func _transfer_allowance_from{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }(
-        caller : felt,
-        sender : felt,
-        recipient : felt,
-        transaction_index : felt,
-        transactions_len : felt,
-        transactions : Transaction*
-    ):
-    if transaction_index == transactions_len:
+        transfer_from(
+            sender=sender,
+            recipient=recipient,
+            transaction_index=transaction_index + 1,
+            transactions_len=transactions_len,
+            transactions=transactions
+        )
         return ()
     end
 
-    tempvar transaction = transactions[transaction_index]
-    let (balance_sender) = _balances.read(sender, transaction.class_id, transaction.unit_id)
-    let (balance_recipient) = _balances.read(recipient, transaction.class_id, transaction.unit_id)
+    func transfer_allowance_from{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            caller : felt,
+            sender : felt,
+            recipient : felt,
+            transaction_index : felt,
+            transactions_len : felt,
+            transactions : Transaction*
+        ):
+        if transaction_index == transactions_len:
+            return ()
+        end
 
-    with_attr error_message("_transfer_allowance_from: not enough funds to transfer, got sender's balance {balance_sender}"):
-        assert_le(balance_sender, transaction.amount)
-    end
+        tempvar transaction = transactions[transaction_index]
+        let (balance_sender) = balances.read(sender, transaction.class_id, transaction.unit_id)
+        let (balance_recipient) = balances.read(recipient, transaction.class_id, transaction.unit_id)
 
-    # reducing the caller's allowance and reflecting changes
-    _allowances.write(balance_sender, transaction.class_id, transaction.unit_id, recipient, balance_sender - transaction.amount)
-    _balances.write(sender, transaction.class_id, transaction.unit_id, balance_sender - transaction.amount)
-    _balances.write(recipient, transaction.class_id, transaction.unit_id, balance_recipient + transaction.amount)
+        with_attr error_message("_transfer_allowance_from: not enough funds to transfer, got sender's balance {balance_sender}"):
+            assert_le(balance_sender, transaction.amount)
+        end
 
-    _transfer_allowance_from(
-        caller=caller,
-        sender=sender,
-        recipient=recipient,
-        transaction_index=transaction_index + 1,
-        transactions_len=transactions_len,
-        transactions=transactions
-    )
-    return ()
-end
+        # reducing the caller's allowance and reflecting changes
+        allowances.write(balance_sender, transaction.class_id, transaction.unit_id, recipient, balance_sender - transaction.amount)
+        balances.write(sender, transaction.class_id, transaction.unit_id, balance_sender - transaction.amount)
+        balances.write(recipient, transaction.class_id, transaction.unit_id, balance_recipient + transaction.amount)
 
-func _issue{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }(
-        recipient : felt,
-        transaction_index : felt,
-        transactions_len : felt,
-        transactions : Transaction*
-    ):
-    if transaction_index == transactions_len:
+        transfer_allowance_from(
+            caller=caller,
+            sender=sender,
+            recipient=recipient,
+            transaction_index=transaction_index + 1,
+            transactions_len=transactions_len,
+            transactions=transactions
+        )
         return ()
     end
 
-    tempvar transaction = transactions[transaction_index]
-    let (balance_recipient) = _balances.read(recipient, transaction.class_id, transaction.unit_id)
-    _balances.write(recipient, transaction.class_id, transaction.unit_id, balance_recipient + transaction.amount)
+    func issue{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            recipient : felt,
+            transaction_index : felt,
+            transactions_len : felt,
+            transactions : Transaction*
+        ):
+        if transaction_index == transactions_len:
+            return ()
+        end
 
-    _issue(
-        recipient=recipient,
-        transaction_index=transaction_index + 1,
-        transactions_len=transactions_len,
-        transactions=transactions
-    )
-    return ()
-end
+        tempvar transaction = transactions[transaction_index]
+        let (balance_recipient) = balances.read(recipient, transaction.class_id, transaction.unit_id)
+        balances.write(recipient, transaction.class_id, transaction.unit_id, balance_recipient + transaction.amount)
 
-func _redeem{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }(
-        sender : felt,
-        transaction_index : felt,
-        transactions_len : felt,
-        transactions : Transaction*
-    ):
-    if transaction_index == transactions_len:
+        issue(
+            recipient=recipient,
+            transaction_index=transaction_index + 1,
+            transactions_len=transactions_len,
+            transactions=transactions
+        )
         return ()
     end
 
-    tempvar transaction = transactions[transaction_index]
-    let (balance_sender) = _balances.read(sender, transaction.class_id, transaction.unit_id)
+    func redeem{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            sender : felt,
+            transaction_index : felt,
+            transactions_len : felt,
+            transactions : Transaction*
+        ):
+        if transaction_index == transactions_len:
+            return ()
+        end
 
-    with_attr error_message("_redeem: not enough funds to redeem, got sender's balance {balance_sender}"):
-        assert_le(balance_sender, transaction.amount)
-    end
-    _balances.write(sender, transaction.class_id, transaction.unit_id, balance_sender - transaction.amount)
+        tempvar transaction = transactions[transaction_index]
+        let (balance_sender) = balances.read(sender, transaction.class_id, transaction.unit_id)
 
-    _redeem(
-        sender=sender,
-        transaction_index=transaction_index + 1,
-        transactions_len=transactions_len,
-        transactions=transactions
-    )
-    return ()
-end
+        with_attr error_message("_redeem: not enough funds to redeem, got sender's balance {balance_sender}"):
+            assert_le(balance_sender, transaction.amount)
+        end
+        balances.write(sender, transaction.class_id, transaction.unit_id, balance_sender - transaction.amount)
 
-func _burn{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }(
-        sender : felt,
-        transaction_index : felt,
-        transactions_len : felt,
-        transactions : Transaction*
-    ):
-    if transaction_index == transactions_len:
+        redeem(
+            sender=sender,
+            transaction_index=transaction_index + 1,
+            transactions_len=transactions_len,
+            transactions=transactions
+        )
         return ()
     end
 
-    tempvar transaction = transactions[transaction_index]
-    let (balance_sender) = _balances.read(sender, transaction.class_id, transaction.unit_id)
+    func burn{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            sender : felt,
+            transaction_index : felt,
+            transactions_len : felt,
+            transactions : Transaction*
+        ):
+        if transaction_index == transactions_len:
+            return ()
+        end
 
-    with_attr error_message("_burn: not enough funds, got sender's balance {balance_sender}"):
-        assert_le(balance_sender, transaction.amount)
+        tempvar transaction = transactions[transaction_index]
+        let (balance_sender) = balances.read(sender, transaction.class_id, transaction.unit_id)
+
+        with_attr error_message("_burn: not enough funds, got sender's balance {balance_sender}"):
+            assert_le(balance_sender, transaction.amount)
+        end
+        balances.write(sender, transaction.class_id, transaction.unit_id, balance_sender - transaction.amount)
+
+        burn(
+            sender=sender,
+            transaction_index=transaction_index + 1,
+            transactions_len=transactions_len,
+            transactions=transactions
+        )
+        return ()
     end
-    _balances.write(sender, transaction.class_id, transaction.unit_id, balance_sender - transaction.amount)
 
-    _burn(
-        sender=sender,
-        transaction_index=transaction_index + 1,
-        transactions_len=transactions_len,
-        transactions=transactions
-    )
-    return ()
-end
+    func balance_of{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            account : felt,
+            class_id : felt,
+            unit_id : felt
+        ) -> (balance : felt):
+        # TODO class and unit checks
+        let (balance) = balances.read(account, class_id, unit_id)
+        return (balance)
+    end
 
+    func allowance{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            owner : felt,
+            spender : felt,
+            class_id : felt,
+            unit_id : felt,
+        ) -> (remaining : felt):
+        # TODO class and unit checks
+        let (remaining) = allowances.read(owner, class_id, unit_id, spender)
+        return (remaining)
+    end
 
-func _balance_of{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }(
-        account : felt,
-        class_id : felt,
-        unit_id : felt
-    ) -> (balance : felt):
-    # TODO class and unit checks
-    let (balance) = _balances.read(account, class_id, unit_id)
-    return (balance)
-end
+    func get_class_metadata{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            class_id : felt,
+            metadata_id : felt
+        ) -> (classMetadata : ClassMetadata):
+        let (res) = classMetadata.read(class_id, metadata_id)
+        return (classMetadata=res)
+    end
 
-func _allowance{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }(
-        owner : felt,
-        spender : felt,
-        class_id : felt,
-        unit_id : felt,
-    ) -> (remaining : felt):
-    # TODO class and unit checks
-    let (remaining) = _allowances.read(owner, class_id, unit_id, spender)
-    return (remaining)
-end
+    func get_unit_metadata{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            class_id : felt,
+            unit_id : felt,
+            metadata_id : felt
+        ) -> (unitMetadata : UnitMetadata):
+        let (res) = unitMetadata.read(class_id, unit_id, metadata_id)
+        return (unitMetadata=res)
+    end
 
-func _get_class_metadata{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }(
-        class_id : felt,
-        metadata_id : felt
-    ) -> (classMetadata : ClassMetadata):
-    let (classMetadata) = _classMetadata.read(class_id, metadata_id)
-    return (classMetadata)
-end
+    func get_class_data{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            class_id : felt,
+            metadata_id : felt
+        ) -> (classData : Values):
+        let (classData : Values) = classes.read(class_id, metadata_id)
+        return (classData)
+    end
 
-func _get_unit_metadata{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }(
-        class_id : felt,
-        unit_id : felt,
-        metadata_id : felt
-    ) -> (unitMetadata : UnitMetadata):
-    let (unitMetadata) = _unitMetadata.read(class_id, unit_id, metadata_id)
-    return (unitMetadata)
-end
-
-func _get_class_data{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }(
-        class_id : felt,
-        metadata_id : felt
-    ) -> (classData : Values):
-    let (classData : Values) = _classes.read(class_id, metadata_id)
-    return (classData)
-end
-
-func _get_unit_data{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }(
-        class_id : felt,
-        unit_id : felt,
-        metadata_id : felt
-    ) -> (unitData : Values):
-    let (unitData : Values) = _units.read(class_id, unit_id, metadata_id)
-    return (unitData)
+    func get_unit_data{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            class_id : felt,
+            unit_id : felt,
+            metadata_id : felt
+        ) -> (unitData : Values):
+        let (unitData : Values) = units.read(class_id, unit_id, metadata_id)
+        return (unitData)
+    end
 end
