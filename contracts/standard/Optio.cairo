@@ -19,19 +19,7 @@ from contracts.utils.structs import (
     Unit,
     Transaction
 )
-from contracts.standard.library import (
-    _transfer_from,
-    _transfer_allowance_from,
-    _issue,
-    _redeem,
-    _burn,
-    _balance_of,
-    _allowance,
-    _get_class_metadata,
-    _get_unit_metadata,
-    _get_class_data,
-    _get_unit_data
-)
+from contracts.standard.library import OPTIO
 
 
 #
@@ -52,6 +40,18 @@ end
 
 @event
 func Burn(caller : felt, _from : felt, _transactions_len : felt, _transactions : felt*):
+end
+
+
+#
+## Constructor
+#
+
+@constructor
+func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        name : felt, asset : felt):
+    OPTIO.initialize(name, asset)
+    return ()
 end
 
 
@@ -80,7 +80,7 @@ func transferFrom{
     end
 
     let (caller) = get_caller_address()
-    _transfer_from(
+    OPTIO.transfer_from(
         sender=_from,
         recipient=_to,
         transaction_index=0,
@@ -113,7 +113,7 @@ func transferAllowanceFrom{
     end
 
     let (local caller) = get_caller_address()
-    _transfer_allowance_from(
+    OPTIO.transfer_allowance_from(
         caller=caller,
         sender=_from,
         recipient=_to,
@@ -141,7 +141,7 @@ func issue{
         assert_not_zero(_to)
     end
 
-    _issue(
+    OPTIO.issue(
         recipient=_to,
         transaction_index=0,
         transactions_len=_transactions_len,
@@ -168,7 +168,7 @@ func redeem{
         assert_not_zero(_from)
     end
 
-    _redeem(
+    OPTIO.redeem(
         sender=_from,
         transaction_index=0,
         transactions_len=_transactions_len,
@@ -196,7 +196,7 @@ func burn{
         assert caller = _from
     end
 
-    _burn(
+    OPTIO.burn(
         sender=_from,
         transaction_index=0,
         transactions_len=_transactions_len,
@@ -226,7 +226,7 @@ func balanceOf{
         assert_not_zero(account)
     end
 
-    let (balance : felt) = _balance_of(
+    let (balance : felt) = OPTIO.balance_of(
         account=account,
         class_id=class_id,
         unit_id=unit_id
@@ -250,7 +250,7 @@ func allowance{
         assert_not_zero(spender)
     end
 
-    let (remaining : felt) = _allowance(
+    let (remaining : felt) = OPTIO.allowance(
         owner=owner,
         spender=spender,
         class_id=class_id,
@@ -269,7 +269,7 @@ func getClassMetadata{
         metadata_id : felt,
     ) -> (classMetadata : ClassMetadata):
     # TODO check if classMetadata exists
-    let (classMetadata : ClassMetadata) = _get_class_metadata(class_id, metadata_id)
+    let (classMetadata : ClassMetadata) = OPTIO.get_class_metadata(class_id, metadata_id)
     return (classMetadata)
 end
 
@@ -284,7 +284,7 @@ func getUnitMetadata{
         metadata_id : felt
     ) -> (unitMetadata : UnitMetadata):
     # TODO check if unitMetadata exists
-    let (unitMetadata : UnitMetadata) = _get_unit_metadata(class_id, unit_id, metadata_id)
+    let (unitMetadata : UnitMetadata) = OPTIO.get_unit_metadata(class_id, unit_id, metadata_id)
     return (unitMetadata)
 end
 
@@ -298,7 +298,7 @@ func getClassData{
         metadata_id : felt
     ) -> (classData : Values):
     # TODO check if class exists
-    let (classData : Values) = _get_class_data(class_id, metadata_id)
+    let (classData : Values) = OPTIO.get_class_data(class_id, metadata_id)
     return (classData)
 end
 
@@ -313,6 +313,6 @@ func getUnitData{
         metadata_id : felt
     ) -> (unitData : Values):
     # TODO check if class and unit exist
-    let (unitData : Values) = _get_unit_data(class_id, unit_id, metadata_id)
+    let (unitData : Values) = OPTIO.get_unit_data(class_id, unit_id, metadata_id)
     return (unitData)
 end
