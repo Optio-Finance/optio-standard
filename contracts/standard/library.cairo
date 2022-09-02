@@ -43,7 +43,7 @@ func units(class_id : felt, unit_id : felt, metadata_id : felt) -> (unit : Value
 end
 
 @storage_var
-func operator_approvals(address : felt, operator : felt) -> (approved : felt):
+func operator_approvals(owner : felt, operator : felt) -> (approved : felt):
 end
 
 @storage_var
@@ -322,5 +322,83 @@ namespace OPTIO:
         ) -> (unitData : Values):
         let (unitData : Values) = units.read(class_id, unit_id, metadata_id)
         return (unitData)
+    end
+
+    func approve{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            owner : felt,
+            spender : felt,
+            transaction_index : felt,
+            transactions_len : felt,
+            transactions : Transaction*
+        ):
+        if transaction_index == transactions_len:
+            return ()
+        end
+
+        tempvar tx = transactions[transaction_index]
+        allowances.write(owner, tx.class_id, tx.unit_id, spender, tx.amount)
+
+        approve(
+            owner=owner,
+            spender=spender,
+            transaction_index=transaction_index + 1,
+            transactions_len=transactions_len,
+            transactions=transactions,
+        )
+        return ()
+    end
+
+    func set_approval_for{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            owner : felt,
+            operator : felt,
+            approved : felt
+        ):
+        operator_approvals.write(owner, operator, approved)
+        return ()
+    end
+
+    func total_supply{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            caller : felt,
+            class_id : felt,
+            unit_id : felt
+        ) -> (balance : felt):
+        let (balance) = balances.read(caller, class_id, unit_id)
+        return (balance)
+    end
+
+    func get_progress{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            class_id : felt,
+            unit_id : felt
+        ) -> (progress : felt):
+        let (progress) = get_block_timestamp()
+        return (progress)
+    end
+
+    func is_approved_for{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            owner : felt,
+            operator : felt
+        ) -> (approved : felt):
+        let (approved) = operator_approvals.read(owner, operator)
+        return (approved)
     end
 end

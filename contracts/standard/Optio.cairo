@@ -42,6 +42,10 @@ end
 func Burn(caller : felt, _from : felt, _transactions_len : felt, _transactions : felt*):
 end
 
+@event
+func ApprovalFor(caller : felt, operator : felt, approved : felt):
+end
+
 
 #
 ## Constructor
@@ -315,4 +319,99 @@ func getUnitData{
     # TODO check if class and unit exist
     let (unitData : Values) = OPTIO.get_unit_data(class_id, unit_id, metadata_id)
     return (unitData)
+end
+
+@external
+func approve{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        owner : felt,
+        spender : felt,
+        transactions_len : felt,
+        transactions : Transaction*
+    ):
+    alloc_locals
+    with_attr error_message("approve: zero address, got owner={owner}, spender={spender}"):
+        assert_not_zero(owner)
+        assert_not_zero(spender)
+    end
+
+    let (local caller) = get_caller_address()
+    with_attr error_message("approve: can't approve own, got owner={owner}, spender={spender}"):
+        assert_not_equal(owner, spender)
+        assert_not_equal(caller, spender)
+    end
+
+    OPTIO.approve(
+        owner=owner,
+        spender=spender,
+        transaction_index=0,
+        transactions_len=transactions_len,
+        transactions=transactions
+    )
+    return ()
+end
+
+@external
+func setApprovalFor{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        operator : felt,
+        approved : felt,
+    ):
+    alloc_locals
+    let (local owner) = get_caller_address()
+    with_attr error_message("setApprovalFor: zero address, got operator={operator}"):
+        assert_not_zero(operator)
+    end
+
+    OPTIO.set_approval_for(owner, operator, approved)
+    ApprovalFor.emit(owner, operator, approved)
+    return ()
+end
+
+@view
+func totalSupply{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_id : felt,
+        unit_id : felt,
+    ) -> (balance : felt):
+    alloc_locals
+    let (caller) = get_caller_address()
+
+    let (balance) = OPTIO.total_supply(caller, class_id, unit_id)
+    return (balance)
+end
+
+@view
+func getProgress{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_id : felt,
+        unit_id : felt
+    ) -> (progress : felt):
+    let (progress) = OPTIO.get_progress(class_id, unit_id)
+    return (progress)
+end
+
+@view
+func isApprovedFor{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        owner : felt,
+        operator : felt
+    ) -> (approved : felt):
+    let (approved) = OPTIO.is_approved_for(owner, operator)
+    return (approved)
 end
