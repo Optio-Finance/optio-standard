@@ -47,11 +47,11 @@ func _operator_approvals(address : felt, operator : felt) -> (approved : felt):
 end
 
 @storage_var
-func _allowances(address : felt, spender : felt) -> (amount : felt):
+func _balances(address : felt, class_id : felt, unit_id : felt) -> (amount : felt):
 end
 
 @storage_var
-func _balances(address : felt) -> (amount : felt):
+func _allowances(address : felt, class_id : felt, unit_id : felt, spender : felt) -> (amount : felt):
 end
 
 
@@ -75,15 +75,15 @@ func _transfer_from{
     end
 
     tempvar transaction = transactions[transaction_index]
-    let (balance_sender) = _balances.read(sender)
-    let (balance_recipient) = _balances.read(recipient)
+    let (balance_sender) = _balances.read(sender, transaction.class_id, transaction.unit_id)
+    let (balance_recipient) = _balances.read(recipient, transaction.class_id, transaction.unit_id)
 
     with_attr error_message("_transfer_from: not enough funds to transfer, got sender's balance {balance_sender}"):
         assert_le(balance_sender, transaction.amount)
     end
 
-    _balances.write(sender, balance_sender - transaction.amount)
-    _balances.write(recipient, balance_recipient + transaction.amount)
+    _balances.write(sender, transaction.class_id, transaction.unit_id, balance_sender - transaction.amount)
+    _balances.write(recipient, transaction.class_id, transaction.unit_id, balance_recipient + transaction.amount)
 
     _transfer_from(
         sender=sender,
@@ -112,17 +112,17 @@ func _transfer_allowance_from{
     end
 
     tempvar transaction = transactions[transaction_index]
-    let (balance_sender) = _balances.read(sender)
-    let (balance_recipient) = _balances.read(recipient)
+    let (balance_sender) = _balances.read(sender, transaction.class_id, transaction.unit_id)
+    let (balance_recipient) = _balances.read(recipient, transaction.class_id, transaction.unit_id)
 
     with_attr error_message("_transfer_allowance_from: not enough funds to transfer, got sender's balance {balance_sender}"):
         assert_le(balance_sender, transaction.amount)
     end
 
     # reducing the caller's allowance and reflecting changes
-    _allowances.write(balance_sender, caller, balance_sender - transaction.amount)
-    _balances.write(sender, balance_sender - transaction.amount)
-    _balances.write(recipient, balance_recipient + transaction.amount)
+    _allowances.write(balance_sender, transaction.class_id, transaction.unit_id, recipient, balance_sender - transaction.amount)
+    _balances.write(sender, transaction.class_id, transaction.unit_id, balance_sender - transaction.amount)
+    _balances.write(recipient, transaction.class_id, transaction.unit_id, balance_recipient + transaction.amount)
 
     _transfer_allowance_from(
         caller=caller,
@@ -150,8 +150,8 @@ func _issue{
     end
 
     tempvar transaction = transactions[transaction_index]
-    let (balance_recipient) = _balances.read(recipient)
-    _balances.write(recipient, balance_recipient + transaction.amount)
+    let (balance_recipient) = _balances.read(recipient, transaction.class_id, transaction.unit_id)
+    _balances.write(recipient, transaction.class_id, transaction.unit_id, balance_recipient + transaction.amount)
 
     _issue(
         recipient=recipient,
@@ -177,12 +177,12 @@ func _redeem{
     end
 
     tempvar transaction = transactions[transaction_index]
-    let (balance_sender) = _balances.read(sender)
+    let (balance_sender) = _balances.read(sender, transaction.class_id, transaction.unit_id)
 
     with_attr error_message("_redeem: not enough funds to redeem, got sender's balance {balance_sender}"):
         assert_le(balance_sender, transaction.amount)
     end
-    _balances.write(sender, balance_sender - transaction.amount)
+    _balances.write(sender, transaction.class_id, transaction.unit_id, balance_sender - transaction.amount)
 
     _redeem(
         sender=sender,
@@ -208,12 +208,12 @@ func _burn{
     end
 
     tempvar transaction = transactions[transaction_index]
-    let (balance_sender) = _balances.read(sender)
+    let (balance_sender) = _balances.read(sender, transaction.class_id, transaction.unit_id)
 
     with_attr error_message("_burn: not enough funds, got sender's balance {balance_sender}"):
         assert_le(balance_sender, transaction.amount)
     end
-    _balances.write(sender, balance_sender - transaction.amount)
+    _balances.write(sender, transaction.class_id, transaction.unit_id, balance_sender - transaction.amount)
 
     _burn(
         sender=sender,
@@ -235,7 +235,7 @@ func _balance_of{
         unit_id : felt
     ) -> (balance : felt):
     # TODO class and unit checks
-    let (balance) = _balances.read(account)
+    let (balance) = _balances.read(account, class_id, unit_id)
     return (balance)
 end
 
@@ -250,7 +250,7 @@ func _allowance{
         unit_id : felt,
     ) -> (remaining : felt):
     # TODO class and unit checks
-    let (remaining) = _allowances.read(owner, spender)
+    let (remaining) = _allowances.read(owner, class_id, unit_id, spender)
     return (remaining)
 end
 
