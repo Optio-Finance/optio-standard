@@ -509,4 +509,76 @@ namespace OPTIO:
         )
         return ()
     end
+
+    func create_class{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            index : felt,
+            class_id : felt,
+            metadata_ids_len : felt,
+            metadata_ids : felt*,
+            values_len : felt,
+            values : Values
+        ):
+        if index == metadata_ids_len:
+            return ()
+        end
+
+        with_attr error_message("create_class: inputs lengths not equal"):
+            assert metadata_ids_len = values_len
+        end
+
+        tempvar metadata_id = metadata_ids[index]
+        tempvar value = values[index]
+        classes.write(class_id, metadata_id, value)
+
+        create_class(
+            index=index + 1,
+            class_id=class_id,
+            metadata_ids_len=metadata_ids_len,
+            metadata_ids=metadata_ids,
+            values_len=values_len,
+            values=values,
+        )
+        return ()
+    end
+
+    func create_unit{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            index : felt,
+            class_id : felt,
+            unit_id : felt,
+            metadata_ids_len : felt,
+            metadata_ids : felt*,
+            values_len : felt,
+            values : Values
+        ):
+        if index == metadata_ids_len:
+            return ()
+        end
+
+        with_attr error_message("create_unit: inputs lengths not equal"):
+            assert metadata_ids_len = values_len
+        end
+
+        tempvar metadata_id = metadata_ids[index]
+        tempvar value = values[index]
+        units.write(class_id, unit_id, metadata_id, value)
+
+        create_unit(
+            index=index + 1,
+            class_id=class_id,
+            unit_id=unit_id,
+            metadata_ids_len=metadata_ids_len,
+            metadata_ids=metadata_ids,
+            values_len=values_len,
+            values=values,
+        )
+        return ()
+    end
 end
