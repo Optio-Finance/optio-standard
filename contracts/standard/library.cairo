@@ -401,4 +401,184 @@ namespace OPTIO:
         let (approved) = operator_approvals.read(owner, operator)
         return (approved)
     end
+
+    func create_class_metadata{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            class_id : felt,
+            metadata_id : felt,
+            metadata : ClassMetadata
+        ):
+        classMetadata.write(class_id, metadata_id, metadata)
+        return ()
+    end
+
+    func create_class_metadata_batch{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            index : felt,
+            class_ids_len : felt,
+            class_ids : felt*,
+            metadata_ids_len : felt,
+            metadata_ids : felt*,
+            metadata_len : felt,
+            metadata_array : ClassMetadata*
+        ):
+        if index == metadata_len:
+            return ()
+        end
+
+        with_attr error_message("create_class_metadata_batch: inputs lengths not equal"):
+            assert class_ids_len = metadata_ids_len
+            assert metadata_ids_len = metadata_len
+        end
+
+        tempvar class_id = class_ids[index]
+        tempvar metadata_id = metadata_ids[index]
+        tempvar metadata = metadata_array[index]
+        classMetadata.write(class_id, metadata_id, metadata)
+
+        create_class_metadata_batch(
+            index=index + 1,
+            class_ids_len=class_ids_len,
+            class_ids=class_ids,
+            metadata_len=metadata_len,
+            metadata_array=metadata_array,
+        )
+        return ()
+    end
+
+    func create_unit_metadata{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            unit_id : felt,
+            metadata_id : felt,
+            metadata : UnitMetadata
+        ):
+        unitMetadata.write(unit_id, metadata_id, metadata)
+        return ()
+    end
+
+    func create_unit_metadata_batch{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            index : felt,
+            class_ids_len : felt,
+            class_ids : felt*,
+            unit_ids_len : felt,
+            unit_ids : felt*,
+            metadata_ids_len : felt,
+            metadata_ids : felt*,
+            metadata_len : felt,
+            metadata_array : ClassMetadata*
+        ):
+        if index == metadata_len:
+            return ()
+        end
+
+        with_attr error_message("create_unit_metadata_batch: inputs lengths not equal"):
+            assert class_ids_len = unit_ids_len
+            assert unit_ids_len = metadata_ids_len
+            assert metadata_ids_len = metadata_len
+        end
+
+        tempvar class_id = class_ids[index]
+        tempvar unit_id = unit_ids[index]
+        tempvar metadata_id = metadata_ids[index]
+        tempvar metadata = metadata_array[index]
+        unitMetadata.write(class_id, unit_id, metadata_id, metadata)
+
+        create_unit_metadata_batch(
+            index=index + 1,
+            class_ids_len=class_ids_len,
+            class_ids=class_ids,
+            unit_ids_len=unit_ids_len,
+            unit_ids=unit_ids,
+            metadata_ids_len=metadata_ids_len,
+            metadata_ids=metadata_ids,
+            metadata_len=metadata_len,
+            metadata_array=metadata_array,
+        )
+        return ()
+    end
+
+    func create_class{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            index : felt,
+            class_id : felt,
+            metadata_ids_len : felt,
+            metadata_ids : felt*,
+            values_len : felt,
+            values : Values
+        ):
+        if index == metadata_ids_len:
+            return ()
+        end
+
+        with_attr error_message("create_class: inputs lengths not equal"):
+            assert metadata_ids_len = values_len
+        end
+
+        tempvar metadata_id = metadata_ids[index]
+        tempvar value = values[index]
+        classes.write(class_id, metadata_id, value)
+
+        create_class(
+            index=index + 1,
+            class_id=class_id,
+            metadata_ids_len=metadata_ids_len,
+            metadata_ids=metadata_ids,
+            values_len=values_len,
+            values=values,
+        )
+        return ()
+    end
+
+    func create_unit{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            index : felt,
+            class_id : felt,
+            unit_id : felt,
+            metadata_ids_len : felt,
+            metadata_ids : felt*,
+            values_len : felt,
+            values : Values
+        ):
+        if index == metadata_ids_len:
+            return ()
+        end
+
+        with_attr error_message("create_unit: inputs lengths not equal"):
+            assert metadata_ids_len = values_len
+        end
+
+        tempvar metadata_id = metadata_ids[index]
+        tempvar value = values[index]
+        units.write(class_id, unit_id, metadata_id, value)
+
+        create_unit(
+            index=index + 1,
+            class_id=class_id,
+            unit_id=unit_id,
+            metadata_ids_len=metadata_ids_len,
+            metadata_ids=metadata_ids,
+            values_len=values_len,
+            values=values,
+        )
+        return ()
+    end
 end
