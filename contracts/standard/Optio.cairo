@@ -535,3 +535,32 @@ func createClass{
     )
     return ()
 end
+
+@external
+func createUnit{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_id : felt,
+        unit_id : felt,
+        metadata_ids_len : felt,
+        metadata_ids : felt*,
+        values_len : felt,
+        values : Values*
+    ):
+    with_attr error_message("createUnit: got zero inputs lengths"):
+        assert_not_zero(metadata_ids_len)
+        assert_not_zero(values_len)
+    end
+    OPTIO.create_unit(
+        index=0,
+        class_id=class_id,
+        unit_id=unit_id,
+        metadata_ids_len=metadata_ids_len,
+        metadata_ids=metadata_ids,
+        values_len=values_len,
+        values=values,
+    )
+    return ()
+end
