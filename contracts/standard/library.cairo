@@ -523,7 +523,7 @@ namespace OPTIO:
             metadata_ids_len : felt,
             metadata_ids : felt*,
             values_len : felt,
-            values : Values
+            values : Values*
         ):
         if index == metadata_ids_len:
             return ()
