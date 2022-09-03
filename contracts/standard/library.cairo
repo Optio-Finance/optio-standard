@@ -401,4 +401,54 @@ namespace OPTIO:
         let (approved) = operator_approvals.read(owner, operator)
         return (approved)
     end
+
+    func create_class_metadata{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            class_id : felt,
+            metadata_id : felt,
+            metadata : ClassMetadata
+        ):
+        classMetadata.write(class_id, metadata_id, metadata)
+        return ()
+    end
+
+    func create_class_metadata_batch{
+            syscall_ptr : felt*,
+            pedersen_ptr : HashBuiltin*,
+            range_check_ptr
+        }(
+            index : felt,
+            class_ids_len : felt,
+            class_ids : felt*,
+            metadata_ids_len : felt,
+            metadata_ids : felt*,
+            metadata_len : felt,
+            metadata_array : ClassMetadata*
+        ):
+        if index == metadata_len:
+            return ()
+        end
+
+        with_attr error_message("create_class_metadata_batch: inputs lengths not equal"):
+            assert class_ids_len = metadata_ids_len
+            assert metadata_ids_len = metadata_len
+        end
+
+        tempvar class_id = class_ids[index]
+        tempvar metadata_id = metadata_ids[index]
+        tempvar metadata = metadata_array[index]
+        classMetadata.write(class_id, metadata_id, metadata)
+
+        create_class_metadata_batch(
+            index=index + 1,
+            class_ids_len=class_ids_len,
+            class_ids=class_ids,
+            metadata_len=metadata_len,
+            metadata_array=metadata_array,
+        )
+        return ()
+    end
 end
