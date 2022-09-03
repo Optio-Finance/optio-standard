@@ -458,3 +458,53 @@ func createClassMetadataBatch{
     )
     return ()
 end
+
+@external
+func createUnitMetadata{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_id : felt,
+        unit_id : felt,
+        metadata_id : felt,
+        metadata : UnitMetadata
+    ):
+    OPTIO.create_unit_metadata(class_id, unit_id, metadata_id, metadata)
+    return ()
+end
+
+@external
+func createUnitMetadataBatch{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_ids_len : felt,
+        class_ids : felt*,
+        unit_ids_len : felt,
+        unit_ids : felt*,
+        metadata_ids_len : felt,
+        metadata_ids : felt*,
+        metadata_array_len : felt,
+        metadata_array : UnitMetadata*
+    ):
+    with_attr error_message("createClassMetadataBatch: got zero inputs lengths"):
+        assert_not_zero(class_ids_len)
+        assert_not_zero(unit_ids_len)
+        assert_not_zero(metadata_ids_len)
+        assert_not_zero(metadata_array_len)
+    end
+    OPTIO.create_unit_metadata_batch(
+        index=0,
+        class_ids_len=class_ids_len,
+        class_ids=class_ids,
+        unit_ids_len=unit_ids_len,
+        unit_ids=unit_ids,
+        metadata_ids_len=metadata_ids_len,
+        metadata_ids=metadata_ids,
+        metadata_array_len=metadata_array_len,
+        metadata_array=metadata_array,
+    )
+    return ()
+end
