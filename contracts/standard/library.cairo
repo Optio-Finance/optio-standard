@@ -425,16 +425,16 @@ namespace OPTIO:
             class_ids : felt*,
             metadata_ids_len : felt,
             metadata_ids : felt*,
-            metadata_len : felt,
+            metadata_array_len : felt,
             metadata_array : ClassMetadata*
         ):
-        if index == metadata_len:
+        if index == metadata_array_len:
             return ()
         end
 
         with_attr error_message("create_class_metadata_batch: inputs lengths not equal"):
             assert class_ids_len = metadata_ids_len
-            assert metadata_ids_len = metadata_len
+            assert metadata_ids_len = metadata_array_len
         end
 
         tempvar class_id = class_ids[index]
@@ -446,7 +446,9 @@ namespace OPTIO:
             index=index + 1,
             class_ids_len=class_ids_len,
             class_ids=class_ids,
-            metadata_len=metadata_len,
+            metadata_ids_len=metadata_ids_len,
+            metadata_ids=metadata_ids,
+            metadata_array_len=metadata_array_len,
             metadata_array=metadata_array,
         )
         return ()

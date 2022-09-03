@@ -415,3 +415,46 @@ func isApprovedFor{
     let (approved) = OPTIO.is_approved_for(owner, operator)
     return (approved)
 end
+
+@external
+func createClassMetadata{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_id : felt,
+        metadata_id : felt,
+        metadata : ClassMetadata
+    ):
+    OPTIO.create_class_metadata(class_id, metadata_id, metadata)
+    return ()
+end
+
+@external
+func createClassMetadataBatch{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_ids_len : felt,
+        class_ids : felt*,
+        metadata_ids_len : felt,
+        metadata_ids : felt*,
+        metadata_array_len : felt,
+        metadata_array : ClassMetadata*
+    ):
+    with_attr error_message("createClassMetadataBatch: got zero inputs lengths"):
+        assert_not_zero(class_ids_len)
+        assert_not_zero(metadata_ids_len)
+    end
+    OPTIO.create_class_metadata_batch(
+        index=0,
+        class_ids_len=class_ids_len,
+        class_ids=class_ids,
+        metadata_ids_len=metadata_ids_len,
+        metadata_ids=metadata_ids,
+        metadata_array_len=metadata_array_len,
+        metadata_array=metadata_array,
+    )
+    return ()
+end
