@@ -415,3 +415,152 @@ func isApprovedFor{
     let (approved) = OPTIO.is_approved_for(owner, operator)
     return (approved)
 end
+
+@external
+func createClassMetadata{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_id : felt,
+        metadata_id : felt,
+        metadata : ClassMetadata
+    ):
+    OPTIO.create_class_metadata(class_id, metadata_id, metadata)
+    return ()
+end
+
+@external
+func createClassMetadataBatch{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_ids_len : felt,
+        class_ids : felt*,
+        metadata_ids_len : felt,
+        metadata_ids : felt*,
+        metadata_array_len : felt,
+        metadata_array : ClassMetadata*
+    ):
+    with_attr error_message("createClassMetadataBatch: got zero inputs lengths"):
+        assert_not_zero(class_ids_len)
+        assert_not_zero(metadata_ids_len)
+    end
+    OPTIO.create_class_metadata_batch(
+        index=0,
+        class_ids_len=class_ids_len,
+        class_ids=class_ids,
+        metadata_ids_len=metadata_ids_len,
+        metadata_ids=metadata_ids,
+        metadata_array_len=metadata_array_len,
+        metadata_array=metadata_array,
+    )
+    return ()
+end
+
+@external
+func createUnitMetadata{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_id : felt,
+        unit_id : felt,
+        metadata_id : felt,
+        metadata : UnitMetadata
+    ):
+    OPTIO.create_unit_metadata(class_id, unit_id, metadata_id, metadata)
+    return ()
+end
+
+@external
+func createUnitMetadataBatch{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_ids_len : felt,
+        class_ids : felt*,
+        unit_ids_len : felt,
+        unit_ids : felt*,
+        metadata_ids_len : felt,
+        metadata_ids : felt*,
+        metadata_array_len : felt,
+        metadata_array : UnitMetadata*
+    ):
+    with_attr error_message("createClassMetadataBatch: got zero inputs lengths"):
+        assert_not_zero(class_ids_len)
+        assert_not_zero(unit_ids_len)
+        assert_not_zero(metadata_ids_len)
+        assert_not_zero(metadata_array_len)
+    end
+    OPTIO.create_unit_metadata_batch(
+        index=0,
+        class_ids_len=class_ids_len,
+        class_ids=class_ids,
+        unit_ids_len=unit_ids_len,
+        unit_ids=unit_ids,
+        metadata_ids_len=metadata_ids_len,
+        metadata_ids=metadata_ids,
+        metadata_array_len=metadata_array_len,
+        metadata_array=metadata_array,
+    )
+    return ()
+end
+
+@external
+func createClass{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_id : felt,
+        metadata_ids_len : felt,
+        metadata_ids : felt*,
+        values_len : felt,
+        values : Values*
+    ):
+    with_attr error_message("createClass: got zero inputs lengths"):
+        assert_not_zero(metadata_ids_len)
+        assert_not_zero(values_len)
+    end
+    OPTIO.create_class(
+        index=0,
+        class_id=class_id,
+        metadata_ids_len=metadata_ids_len,
+        metadata_ids=metadata_ids,
+        values_len=values_len,
+        values=values,
+    )
+    return ()
+end
+
+@external
+func createUnit{
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr
+    }(
+        class_id : felt,
+        unit_id : felt,
+        metadata_ids_len : felt,
+        metadata_ids : felt*,
+        values_len : felt,
+        values : Values*
+    ):
+    with_attr error_message("createUnit: got zero inputs lengths"):
+        assert_not_zero(metadata_ids_len)
+        assert_not_zero(values_len)
+    end
+    OPTIO.create_unit(
+        index=0,
+        class_id=class_id,
+        unit_id=unit_id,
+        metadata_ids_len=metadata_ids_len,
+        metadata_ids=metadata_ids,
+        values_len=values_len,
+        values=values,
+    )
+    return ()
+end

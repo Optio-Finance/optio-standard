@@ -425,16 +425,16 @@ namespace OPTIO:
             class_ids : felt*,
             metadata_ids_len : felt,
             metadata_ids : felt*,
-            metadata_len : felt,
+            metadata_array_len : felt,
             metadata_array : ClassMetadata*
         ):
-        if index == metadata_len:
+        if index == metadata_array_len:
             return ()
         end
 
         with_attr error_message("create_class_metadata_batch: inputs lengths not equal"):
             assert class_ids_len = metadata_ids_len
-            assert metadata_ids_len = metadata_len
+            assert metadata_ids_len = metadata_array_len
         end
 
         tempvar class_id = class_ids[index]
@@ -446,7 +446,9 @@ namespace OPTIO:
             index=index + 1,
             class_ids_len=class_ids_len,
             class_ids=class_ids,
-            metadata_len=metadata_len,
+            metadata_ids_len=metadata_ids_len,
+            metadata_ids=metadata_ids,
+            metadata_array_len=metadata_array_len,
             metadata_array=metadata_array,
         )
         return ()
@@ -457,11 +459,12 @@ namespace OPTIO:
             pedersen_ptr : HashBuiltin*,
             range_check_ptr
         }(
+            class_id : felt,
             unit_id : felt,
             metadata_id : felt,
             metadata : UnitMetadata
         ):
-        unitMetadata.write(unit_id, metadata_id, metadata)
+        unitMetadata.write(class_id, unit_id, metadata_id, metadata)
         return ()
     end
 
@@ -477,17 +480,17 @@ namespace OPTIO:
             unit_ids : felt*,
             metadata_ids_len : felt,
             metadata_ids : felt*,
-            metadata_len : felt,
-            metadata_array : ClassMetadata*
+            metadata_array_len : felt,
+            metadata_array : UnitMetadata*
         ):
-        if index == metadata_len:
+        if index == metadata_array_len:
             return ()
         end
 
         with_attr error_message("create_unit_metadata_batch: inputs lengths not equal"):
             assert class_ids_len = unit_ids_len
             assert unit_ids_len = metadata_ids_len
-            assert metadata_ids_len = metadata_len
+            assert metadata_ids_len = metadata_array_len
         end
 
         tempvar class_id = class_ids[index]
@@ -504,7 +507,7 @@ namespace OPTIO:
             unit_ids=unit_ids,
             metadata_ids_len=metadata_ids_len,
             metadata_ids=metadata_ids,
-            metadata_len=metadata_len,
+            metadata_array_len=metadata_array_len,
             metadata_array=metadata_array,
         )
         return ()
@@ -520,7 +523,7 @@ namespace OPTIO:
             metadata_ids_len : felt,
             metadata_ids : felt*,
             values_len : felt,
-            values : Values
+            values : Values*
         ):
         if index == metadata_ids_len:
             return ()
@@ -556,7 +559,7 @@ namespace OPTIO:
             metadata_ids_len : felt,
             metadata_ids : felt*,
             values_len : felt,
-            values : Values
+            values : Values*
         ):
         if index == metadata_ids_len:
             return ()
