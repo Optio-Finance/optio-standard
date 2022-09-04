@@ -13,6 +13,10 @@ of arbitrary complexity, transferring batches of multiple token types at once,
 saving on transaction costs. It is also easy to describe and mix financial
 products types in a single contract.
 
+
+https://user-images.githubusercontent.com/110339488/188332533-5b81838a-4cc2-4e60-b94a-dc2b9bf14eab.mp4
+
+
 ## Motivation
 
 Accelerate the issuance and management of financial derivatives on StarkNet by
