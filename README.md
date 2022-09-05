@@ -1,5 +1,7 @@
 # Optio Standard
 
+[![Run Tests](https://github.com/Optio-Finance/optio-standard/actions/workflows/run_tests.yml/badge.svg)](https://github.com/Optio-Finance/optio-standard/actions/workflows/run_tests.yml)
+
 This standard outlines a smart contract interface for issuing and redeeming
 tokenized rights and obligations, managing their ownership and transfer
 restrictions while providing transparency and traceability to token holders on
