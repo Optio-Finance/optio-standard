@@ -4,21 +4,21 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.bool import TRUE, FALSE
 
 @storage_var
-func ReentrancyGuard_entered(option_id : felt) -> (res : felt):
-end
+func ReentrancyGuard_entered() -> (res: felt) {
+}
 
-func ReentrancyGuard_start{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        option_id : felt):
-    let (has_entered) = ReentrancyGuard_entered.read(option_id)
-    with_attr error_message("ReentrancyGuard: reentrant call"):
-        assert has_entered = FALSE
-    end
-    ReentrancyGuard_entered.write(option_id, TRUE)
-    return ()
-end
+namespace ReentrancyGuard {
+    func start{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+        let (has_entered) = ReentrancyGuard_entered.read();
+        with_attr error_message("ReentrancyGuard: reentrant call") {
+            assert has_entered = FALSE;
+        }
+        ReentrancyGuard_entered.write(TRUE);
+        return ();
+    }
 
-func ReentrancyGuard_end{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        option_id : felt):
-    ReentrancyGuard_entered.write(option_id, FALSE)
-    return ()
-end
+    func finish{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+        ReentrancyGuard_entered.write(FALSE);
+        return ();
+    }
+}

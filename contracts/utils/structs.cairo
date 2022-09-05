@@ -1,52 +1,51 @@
 %lang starknet
 
+struct ClassMetadata {
+    class_id: felt,
+    metadata_id: felt,
+    name: felt,
+    type: felt,
+    description: felt,
+}
 
-struct ClassMetadata:
-    member class_id : felt
-    member metadata_id : felt
-    member name : felt
-    member type : felt
-    member description : felt
-end
+struct UnitMetadata {
+    class_id: felt,
+    unit_id: felt,
+    metadata_id: felt,
+    name: felt,
+    type: felt,
+    description: felt,
+}
 
-struct UnitMetadata:
-    member class_id : felt
-    member unit_id : felt
-    member metadata_id : felt
-    member name : felt
-    member type : felt
-    member description : felt
-end
+struct Values {
+    uint: felt,
+    string: felt,
+    address: felt,
+    boolean: felt,
+    timestamp: felt,
+    uri: felt,
+}
 
-struct Values:
-    member uint : felt
-    member string : felt
-    member address : felt
-    member boolean : felt
-    member timestamp : felt
-    member uri : felt
-end
+struct Class {
+    class_id: felt,
+    name: felt,
+    type: felt,
+    description: felt,
+    values: Values,
+}
 
-struct Class:
-    member class_id : felt
-    member name : felt
-    member type : felt
-    member description : felt
-    member values : Values
-end
+struct Unit {
+    class_id: felt,
+    unit_id: felt,
+    class: felt,
+    name: felt,
+    type: felt,
+    description: felt,
+    values: Values,
+}
 
-struct Unit:
-    member class_id : felt
-    member unit_id : felt
-    member class : felt
-    member name : felt
-    member type : felt
-    member description : felt
-    member values : Values
-end
-
-struct Transaction:
-    member class_id : felt
-    member unit_id : felt
-    member amount : felt
-end
+struct Transaction {
+    class_id: felt,
+    unit_id: felt,
+    amount: felt,
+}
