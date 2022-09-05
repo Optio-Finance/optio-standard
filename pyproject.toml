@@ -1,6 +1,7 @@
 [tool.pytest.ini_options]
-addopts = "-ra --disable-warnings --verbose"
 testpaths = "tests"
+addopts = "-ra --disable-warnings --verbose"
+filterwarnings = ["ignore:::.*frozendict*"]
 log_cli = true
 log_cli_level = "INFO"
 log_cli_format = "%(asctime)s [%(levelname)4s] %(message)s (%(filename)s:%(lineno)s)"
