@@ -70,7 +70,7 @@ async def test_setting_metadata(contracts):
     # @param class_id The ID of the particular class
     # @param metadata_id The ID of the particular set of metadata
     # @param Metadata Typings for metadata
-    await optio_contract.createClassMetadata(0, 0, (0, 0, 1, 2, 3)).invoke(
+    await optio_contract.createClassMetadata(0, 0, (0, 0, 1, 2, 3)).execute(
         caller_address=seller_account_contract.contract_address
     )
     return
@@ -83,7 +83,7 @@ async def test_getting_metadata(contracts):
     # @param class_id The ID of the particular class
     # @param metadata_id The ID of the particular set of metadata
     # @param Metadata Typings for metadata
-    await optio_contract.createClassMetadata(0, 1, (0, 1, 4, 5, 6)).invoke(
+    await optio_contract.createClassMetadata(0, 1, (0, 1, 4, 5, 6)).execute(
         caller_address=seller_account_contract.contract_address
     )
     # @dev Getting the metadata typings for class(0, 0)
@@ -99,4 +99,14 @@ async def test_getting_metadata(contracts):
     assert metadata[3] == 5 # type
     assert metadata[4] == 6 # description
 
+    return
+
+@pytest.mark.asyncio
+async def test_transfer(contracts):
+    optio_contract, buyer_account_contract, seller_account_contract = contracts
+    optio_contract.transferFrom(
+        seller_account_contract.contract_address,
+        buyer_account_contract.contract_address,
+        [(0, 0, 100000)]
+    )
     return
