@@ -16,7 +16,7 @@ saving on transaction costs. It is also easy to describe and mix financial
 products types in a single contract.
 
 
-https://user-images.githubusercontent.com/110339488/188332533-5b81838a-4cc2-4e60-b94a-dc2b9bf14eab.mp4
+https://user-images.githubusercontent.com/110339488/188612885-a89852e9-afe4-41f9-b91b-d49f0c628f06.mp4
 
 
 ## Motivation
