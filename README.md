@@ -15,6 +15,7 @@ of arbitrary complexity, transferring batches of multiple token types at once,
 saving on transaction costs. It is also easy to describe and mix financial
 products types in a single contract.
 
+## On-chain metadata explainer video
 
 https://user-images.githubusercontent.com/110339488/188612885-a89852e9-afe4-41f9-b91b-d49f0c628f06.mp4
 
