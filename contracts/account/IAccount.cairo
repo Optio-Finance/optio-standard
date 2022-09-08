@@ -1,6 +1,6 @@
 %lang starknet
 
-from src.account.Account import AccountCallArray
+from contracts.account.Account import AccountCallArray
 
 @contract_interface
 namespace IAccount {
