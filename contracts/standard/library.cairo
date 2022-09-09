@@ -8,11 +8,17 @@ from starkware.starknet.common.syscalls import (
     get_contract_address,
 )
 
-from contracts.utils.structs import ClassMetadata, UnitMetadata, Values, Class, Unit, Transaction
+from contracts.utils.structs import (
+    ClassProps, ClassMetadata, UnitProps, UnitMetadata, Values, Class, Unit, Transaction
+)
 
 //
 /// Storage
 //
+
+@storage_var
+func classProps(class_id: felt) -> (props: ClassProps) {
+}
 
 @storage_var
 func classMetadata(class_id: felt, metadata_id: felt) -> (classMetadata: ClassMetadata) {
@@ -20,6 +26,10 @@ func classMetadata(class_id: felt, metadata_id: felt) -> (classMetadata: ClassMe
 
 @storage_var
 func classes(class_id: felt, metadata_id: felt) -> (class: Values) {
+}
+
+@storage_var
+func unitProps(class_id: felt, unit_id: felt) -> (props: UnitProps) {
 }
 
 @storage_var
@@ -490,5 +500,52 @@ namespace OPTIO {
             values=values,
         );
         return ();
+    }
+
+    func get_latest_unit_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt
+        ) -> (latest_unit_id: felt) {
+        let (class: ClassProps) = classProps.read(class_id);
+        with_attr error_message("get_latest_unit: class doesn't exist") {
+            assert class.exists = 1;
+        }
+        let id = class.latest_unit_id;
+        return (latest_unit_id=id);
+    }
+
+    func class_exists{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt
+        ) -> (exists: felt) {
+        let (class: ClassProps) = classProps.read(class_id);
+        return (exists=class.exists);
+    }
+
+    func unit_exists{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt, unit_id: felt
+        ) -> (exists: felt) {
+        let (unit: UnitProps) = unitProps.read(class_id, unit_id);
+        return (exists=unit.exists);
+    }
+
+    func get_class_liquidity{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt
+        ) -> (liquidity: felt) {
+        let (class: ClassProps) = classProps.read(class_id);
+        with_attr error_message("get_class_liquidity: class doesn't exist") {
+            assert class.exists = 1;
+        }
+        let liquidity = class.liquidity;
+        return (liquidity=liquidity);
+    }
+
+    func get_class_total_supply{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt
+        ) -> (total_supply: felt) {
+        let (class: ClassProps) = classProps.read(class_id);
+        with_attr error_message("get_class_total_supply: class doesn't exist") {
+            assert class.exists = 1;
+        }
+        let total_supply = class.total_supply;
+        return (total_supply=total_supply);
     }
 }
