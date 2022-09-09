@@ -504,14 +504,13 @@ namespace OPTIO {
 
     func get_latest_unit_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
             class_id: felt
-        ) -> (latest_unit_id: felt, latest_unit_timestamp: felt) {
+        ) -> (latest_unit_id: felt) {
         let (class: ClassProps) = classProps.read(class_id);
         with_attr error_message("get_latest_unit: class doesn't exist") {
             assert class.exists = 1;
         }
-        let latest_unit_id = class.latest_unit_id;
-        let latest_unit_timestamp = class.latest_unit_timestamp;
-        return (latest_unit_id, latest_unit_timestamp);
+        let id = class.latest_unit_id;
+        return (latest_unit_id=id);
     }
 
     func class_exists{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -536,7 +535,7 @@ namespace OPTIO {
             assert class.exists = 1;
         }
         let liquidity = class.liquidity;
-        return (liquidity);
+        return (liquidity=liquidity);
     }
 
     func get_class_total_supply{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -547,6 +546,6 @@ namespace OPTIO {
             assert class.exists = 1;
         }
         let total_supply = class.total_supply;
-        return (total_supply);
+        return (total_supply=total_supply);
     }
 }

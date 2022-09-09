@@ -423,3 +423,11 @@ func createUnit{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}
     );
     return ();
 }
+
+@view
+func getLatestUnitId{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        class_id: felt
+    ) -> (latest_unit_id: felt) {
+    let (latest_unit_id) = OPTIO.get_latest_unit_id(class_id);
+    return (latest_unit_id,);
+}
