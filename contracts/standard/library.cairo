@@ -538,4 +538,15 @@ namespace OPTIO {
         let liquidity = class.liquidity;
         return (liquidity);
     }
+
+    func get_class_total_supply{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt
+        ) -> (total_supply: felt) {
+        let (class: ClassProps) = classProps.read(class_id);
+        with_attr error_message("get_class_total_supply: class doesn't exist") {
+            assert class.exists = 1;
+        }
+        let total_supply = class.total_supply;
+        return (total_supply);
+    }
 }
