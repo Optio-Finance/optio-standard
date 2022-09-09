@@ -527,4 +527,15 @@ namespace OPTIO {
         let (unit: UnitProps) = unitProps.read(class_id, unit_id);
         return (exists=unit.exists);
     }
+
+    func get_class_liquidity{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt
+        ) -> (liquidity: felt) {
+        let (class: ClassProps) = classProps.read(class_id);
+        with_attr error_message("get_class_liquidity: class doesn't exist") {
+            assert class.exists = 1;
+        }
+        let liquidity = class.liquidity;
+        return (liquidity);
+    }
 }
