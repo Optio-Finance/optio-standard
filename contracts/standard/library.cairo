@@ -513,4 +513,18 @@ namespace OPTIO {
         let latest_unit_timestamp = class.latest_unit_timestamp;
         return (latest_unit_id, latest_unit_timestamp);
     }
+
+    func class_exists{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt
+        ) -> (exists: felt) {
+        let (class: ClassProps) = classProps.read(class_id);
+        return (exists=class.exists);
+    }
+
+    func unit_exists{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt, unit_id: felt
+        ) -> (exists: felt) {
+        let (unit: UnitProps) = unitProps.read(class_id, unit_id);
+        return (exists=unit.exists);
+    }
 }
