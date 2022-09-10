@@ -502,6 +502,26 @@ namespace OPTIO {
         return ();
     }
 
+    func get_class_props{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt
+        ) -> (class: ClassProps) {
+        let (class: ClassProps) = classProps.read(class_id);
+        with_attr error_message("get_class_props: class doesn't exist") {
+            assert class.exists = TRUE;
+        }
+        return (class,);
+    }
+
+    func get_unit_props{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt, unit_id: felt
+        ) -> (unit: UnitProps) {
+        let (unit: UnitProps) = unitProps.read(class_id, unit_id);
+        with_attr error_message("get_unit_props: class doesn't exist") {
+            assert unit.exists = TRUE;
+        }
+        return (unit,);
+    }
+
     func get_latest_unit_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
             class_id: felt
         ) -> (latest_unit_id: felt) {

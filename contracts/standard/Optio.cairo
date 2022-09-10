@@ -7,7 +7,12 @@ from starkware.starknet.common.syscalls import (
     get_caller_address,
     get_contract_address,
 )
-from contracts.utils.structs import ClassMetadata, UnitMetadata, Values, Class, Unit, Transaction
+from contracts.utils.structs import (
+    ClassMetadata, UnitMetadata,
+    ClassProps, UnitProps,
+    Class, Unit,
+    Values, Transaction,
+)
 
 from contracts.security.reentrancy_guard import ReentrancyGuard
 from contracts.standard.library import OPTIO
@@ -430,4 +435,20 @@ func getLatestUnitId{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check
     ) -> (latest_unit_id: felt) {
     let (latest_unit_id) = OPTIO.get_latest_unit_id(class_id);
     return (latest_unit_id,);
+}
+
+@view
+func getClassProps{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        class_id: felt
+    ) -> (class: ClassProps) {
+    let (class: ClassProps) = OPTIO.get_class_props(class_id);
+    return (class,);
+}
+
+@view
+func getUnitProps{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        class_id: felt, unit_id: felt
+    ) -> (unit: UnitProps) {
+    let (unit: UnitProps) = OPTIO.get_unit_props(class_id, unit_id);
+    return (unit,);
 }
