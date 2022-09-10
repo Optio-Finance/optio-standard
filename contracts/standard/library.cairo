@@ -476,7 +476,7 @@ namespace OPTIO {
         let (class: ClassProps) = classProps.read(class_id);
 
         with_attr error_message("initialize_class: class already exists") {
-            assert class.exists = TRUE;
+            assert class.exists = FALSE;
         }
 
         let (caller: felt) = get_caller_address();
@@ -575,6 +575,43 @@ namespace OPTIO {
             metadata_ids=metadata_ids,
             values_len=values_len,
             values=values,
+        );
+        return ();
+    }
+
+    func initialize_unit{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt, unit_id: felt
+        ) -> () {
+        let (unit: UnitProps) = unitProps.read(class_id, unit_id);
+
+        with_attr error_message("initialize_unit: unit already exists") {
+            assert unit.exists = FALSE;
+        }
+
+        let (caller: felt) = get_caller_address();
+        let (timestamp: felt) = get_block_timestamp();
+        let unit = UnitProps(
+            unit_id=unit_id,
+            exists=TRUE,
+            creator=caller,
+            created=timestamp,
+            prev_unit_id=FALSE,
+        );
+        unitProps.write(class_id, unit_id, unit);
+
+        return ();
+    }
+
+    func update_unit_prev_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt, unit_id: felt, prev_unit_id: felt
+        ) {
+        let (unit: UnitProps) = unitProps.read(class_id, unit_id);
+        let updated_unit = UnitProps(
+            unit_id=unit.unit_id,
+            exists=unit.exists,
+            creator=unit.creator,
+            created=unit.created,
+            prev_unit_id=prev_unit_id,
         );
         return ();
     }
