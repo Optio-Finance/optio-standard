@@ -495,6 +495,57 @@ namespace OPTIO {
         return ();
     }
 
+    func update_class_latest_unit{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt, latest_unit_id: felt, latest_unit_timestamp: felt
+        ) {
+        let (class: classProps) = classProps.read(class_id);
+        let updated_class = ClassProps(
+            exists=class.exists,
+            creator=class.creator,
+            created=class.created,
+            latest_unit_id=latest_unit_id,
+            latest_unit_timestamp=latest_unit_timestamp,
+            liquidity=class.liquidity,
+            total_supply=class.total_supply,
+        );
+        classProps.write(class_id, class);
+        return ();
+    }
+
+    func update_class_liquidity{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt, liquidity: felt
+        ) {
+        let (class: classProps) = classProps.read(class_id);
+        let updated_class = ClassProps(
+            exists=class.exists,
+            creator=class.creator,
+            created=class.created,
+            latest_unit_id=class.latest_unit_id,
+            latest_unit_timestamp=class.latest_unit_timestamp,
+            liquidity=liquidity,
+            total_supply=class.total_supply,
+        );
+        classProps.write(class_id, class);
+        return ();
+    }
+
+    func update_class_total_supply{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt, total_supply: felt
+        ) {
+        let (class: classProps) = classProps.read(class_id);
+        let updated_class = ClassProps(
+            exists=class.exists,
+            creator=class.creator,
+            created=class.created,
+            latest_unit_id=class.latest_unit_id,
+            latest_unit_timestamp=class.latest_unit_timestamp,
+            liquidity=class.liquidity,
+            total_supply=total_supply,
+        );
+        classProps.write(class_id, class);
+        return ();
+    }
+
     func create_unit{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         index: felt,
         class_id: felt,
