@@ -401,6 +401,7 @@ func createClass{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
         values_len=values_len,
         values=values,
     );
+    OPTIO.initialize_class(class_id);
     return ();
 }
 

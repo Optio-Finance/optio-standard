@@ -470,6 +470,31 @@ namespace OPTIO {
         return ();
     }
 
+    func initialize_class{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+            class_id: felt, 
+        ) -> () {
+        let (class: ClassProps) = classProps.read(class_id);
+
+        with_attr error_message("initialize_class: class already exists") {
+            assert class.exists = TRUE;
+        }
+
+        let (caller: felt) = get_caller_address();
+        let (timestamp: felt) = get_block_timestamp();
+        let class = ClassProps(
+            exists=TRUE,
+            creator=caller,
+            created=timestamp,
+            latest_unit_id=FALSE,
+            latest_unit_timestamp=FALSE,
+            liquidity=FALSE,
+            total_supply=FALSE,
+        );
+        classProps.write(class_id, class);
+
+        return ();
+    }
+
     func create_unit{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         index: felt,
         class_id: felt,
