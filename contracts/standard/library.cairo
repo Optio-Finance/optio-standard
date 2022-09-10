@@ -528,7 +528,7 @@ namespace OPTIO {
         ) -> (latest_unit_id: felt) {
         let (class: ClassProps) = classProps.read(class_id);
         with_attr error_message("get_latest_unit: class doesn't exist") {
-            assert class.exists = 1;
+            assert class.exists = TRUE;
         }
         let id = class.latest_unit_id;
         return (latest_unit_id=id);
@@ -553,7 +553,7 @@ namespace OPTIO {
         ) -> (liquidity: felt) {
         let (class: ClassProps) = classProps.read(class_id);
         with_attr error_message("get_class_liquidity: class doesn't exist") {
-            assert class.exists = 1;
+            assert class.exists = TRUE;
         }
         let liquidity = class.liquidity;
         return (liquidity=liquidity);
@@ -564,7 +564,7 @@ namespace OPTIO {
         ) -> (total_supply: felt) {
         let (class: ClassProps) = classProps.read(class_id);
         with_attr error_message("get_class_total_supply: class doesn't exist") {
-            assert class.exists = 1;
+            assert class.exists = TRUE;
         }
         let total_supply = class.total_supply;
         return (total_supply=total_supply);
