@@ -453,3 +453,11 @@ func getUnitProps{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_pt
     let (unit: UnitProps) = OPTIO.get_unit_props(class_id, unit_id);
     return (unit,);
 }
+
+@external
+func updateClassLatestUnit{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        class_id: felt, latest_unit_id: felt, latest_unit_timestamp: felt
+    ) {
+    OPTIO.update_class_latest_unit(class_id, latest_unit_id, latest_unit_timestamp);
+    return ();
+}

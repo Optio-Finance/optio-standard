@@ -498,7 +498,8 @@ namespace OPTIO {
     func update_class_latest_unit{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
             class_id: felt, latest_unit_id: felt, latest_unit_timestamp: felt
         ) {
-        let (class: classProps) = classProps.read(class_id);
+        let (class: ClassProps) = classProps.read(class_id);
+        let (timestamp: felt) = get_block_timestamp();
         let updated_class = ClassProps(
             exists=class.exists,
             creator=class.creator,
@@ -515,7 +516,7 @@ namespace OPTIO {
     func update_class_liquidity{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
             class_id: felt, liquidity: felt
         ) {
-        let (class: classProps) = classProps.read(class_id);
+        let (class: ClassProps) = classProps.read(class_id);
         let updated_class = ClassProps(
             exists=class.exists,
             creator=class.creator,
@@ -532,7 +533,7 @@ namespace OPTIO {
     func update_class_total_supply{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
             class_id: felt, total_supply: felt
         ) {
-        let (class: classProps) = classProps.read(class_id);
+        let (class: ClassProps) = classProps.read(class_id);
         let updated_class = ClassProps(
             exists=class.exists,
             creator=class.creator,
