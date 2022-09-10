@@ -1,6 +1,7 @@
 %lang starknet
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.cairo.common.math import assert_not_zero, assert_not_equal, assert_le, assert_lt
 from starkware.starknet.common.syscalls import (
     get_block_timestamp,
