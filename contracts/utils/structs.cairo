@@ -19,7 +19,7 @@ struct ClassMetadata {
 }
 
 struct UnitProps {
-    id: felt,
+    unit_id: felt,
     exists: felt,
     creator: felt,
     created: felt,
