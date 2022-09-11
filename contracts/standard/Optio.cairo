@@ -227,7 +227,7 @@ func getUnitMetadata{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check
     return (unitMetadata,);
 }
 
-@external
+@view
 func getClassData{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     class_id: felt, metadata_id: felt
 ) -> (classData: Values) {
@@ -236,7 +236,7 @@ func getClassData{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_pt
     return (classData,);
 }
 
-@external
+@view
 func getUnitData{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     class_id: felt, unit_id: felt, metadata_id: felt
 ) -> (unitData: Values) {
