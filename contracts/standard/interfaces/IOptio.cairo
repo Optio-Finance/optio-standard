@@ -116,7 +116,7 @@ namespace IOptio {
     func isApprovedFor(owner: felt, operator: felt) -> (approved: felt) {
     }
 
-    func getLatestUnitId(class_id: felt) -> (unit_id: felt) {
+    func getLatestUnit(class_id: felt) -> (unit_id: felt) {
     }
 
     func createUnit(
