@@ -119,8 +119,22 @@ namespace IOptio {
     func getLatestUnit(class_id: felt) -> (unit_id: felt) {
     }
 
+    func createClassMetadata(class_id: felt, metadata_id: felt, metadata: ClassMetadata) {
+    }
+
+    func createClass(
+            class_id: felt, metadata_ids_len: felt, metadata_ids: felt*, values_len: felt, values: Values*
+        ) {
+    }
+
+    func createUnitMetadata(class_id: felt, unit_id: felt, metadata_id: felt, metadata: UnitMetadata) {
+    }
+
     func createUnit(
             class_id: felt, unit_id: felt, metadata_ids_len: felt, metadata_ids: felt, values_len: felt, values: Values*
         ) {
+    }
+
+    func updateClassLatestUnit(class_id: felt, latest_unit_id: felt, latest_unit_timestamp: felt) {
     }
 }
