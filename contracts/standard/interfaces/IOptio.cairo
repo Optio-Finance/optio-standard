@@ -122,6 +122,12 @@ namespace IOptio {
     func createClassMetadata(class_id: felt, metadata_id: felt, metadata: ClassMetadata) {
     }
 
+    func createClassMetadataBatch(
+            class_ids_len: felt, class_ids: felt, metadata_ids_len: felt, metadata_ids: felt,
+            metadata_array_len: felt, metadata_array: UnitMetadata*
+        ) {
+    }
+
     func createClass(
             class_id: felt, metadata_ids_len: felt, metadata_ids: felt*, values_len: felt, values: Values*
         ) {
