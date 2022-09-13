@@ -123,8 +123,8 @@ namespace IOptio {
     }
 
     func createClassMetadataBatch(
-            class_ids_len: felt, class_ids: felt, metadata_ids_len: felt, metadata_ids: felt,
-            metadata_array_len: felt, metadata_array: UnitMetadata*
+            class_ids_len: felt, class_ids: felt*, metadata_ids_len: felt, metadata_ids: felt*,
+            metadata_array_len: felt, metadata_array: ClassMetadata*
         ) {
     }
 
@@ -134,6 +134,13 @@ namespace IOptio {
     }
 
     func createUnitMetadata(class_id: felt, unit_id: felt, metadata_id: felt, metadata: UnitMetadata) {
+    }
+
+    func createUnitMetadataBatch(
+            class_ids_len: felt, class_ids: felt*, unit_ids_len: felt, unit_ids: felt*,
+            metadata_ids_len: felt, metadata_ids: felt*,
+            metadata_array_len: felt, metadata_array: UnitMetadata*
+        ) {
     }
 
     func createUnit(
