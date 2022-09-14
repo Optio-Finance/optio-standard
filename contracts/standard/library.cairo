@@ -93,7 +93,7 @@ namespace OPTIO {
         );
 
         with_attr error_message(
-                "_transfer_from: not enough funds to transfer, got sender's balance {balance_sender}") {
+                "transfer_from: not enough funds to transfer, got sender's balance {balance_sender}") {
             assert_le(balance_sender, transaction.amount);
         }
 
@@ -136,7 +136,7 @@ namespace OPTIO {
         );
 
         with_attr error_message(
-                "_transfer_allowance_from: not enough funds to transfer, got sender's balance {balance_sender}") {
+                "transfer_allowance_from: not enough funds to transfer, got sender's balance {balance_sender}") {
             assert_le(balance_sender, transaction.amount);
         }
 
@@ -207,7 +207,7 @@ namespace OPTIO {
         let (balance_sender) = balances.read(sender, transaction.class_id, transaction.unit_id);
 
         with_attr error_message(
-                "_redeem: not enough funds to redeem, got sender's balance {balance_sender}") {
+                "redeem: not enough funds to redeem, got sender's balance {balance_sender}") {
             assert_le(balance_sender, transaction.amount);
         }
         balances.write(
@@ -233,7 +233,7 @@ namespace OPTIO {
         tempvar transaction = transactions[transaction_index];
         let (balance_sender) = balances.read(sender, transaction.class_id, transaction.unit_id);
 
-        with_attr error_message("_burn: not enough funds, got sender's balance {balance_sender}") {
+        with_attr error_message("burn: not enough funds, got sender's balance {balance_sender}") {
             assert_le(balance_sender, transaction.amount);
         }
         balances.write(
