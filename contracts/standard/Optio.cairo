@@ -73,7 +73,7 @@ func transferFrom{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_pt
     ReentrancyGuard.start();
 
     let (local caller) = get_caller_address();
-    OPTIO.transfer_from(
+    OPTIO.transfer_from_batch(
         sender=sender,
         recipient=recipient,
         transaction_index=0,
