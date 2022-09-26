@@ -97,6 +97,7 @@ namespace OPTIO {
             assert_le(balance_sender, transaction.amount);
         }
 
+        // @dev subtracting from a sender and adding to a recipient
         balances.write(
             sender, transaction.class_id, transaction.unit_id, balance_sender - transaction.amount
         );
