@@ -99,7 +99,10 @@ namespace OPTIO {
 
         // @dev subtracting from a sender and adding to a recipient
         balances.write(
-            sender, transaction.class_id, transaction.unit_id, balance_sender - transaction.amount
+            sender,
+            transaction.class_id,
+            transaction.unit_id,
+            balance_sender - transaction.amount
         );
         balances.write(
             recipient,
