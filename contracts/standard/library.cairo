@@ -130,7 +130,7 @@ namespace OPTIO {
             balance_recipient + transaction.amount,
         );
 
-        transfer_from(
+        transfer_from_batch(
             sender=sender,
             recipient=recipient,
             transaction_index=transaction_index + 1,
