@@ -63,12 +63,26 @@ namespace IOptio {
     func isApprovedFor(owner: felt, operator: felt) -> (approved: felt) {
     }
 
+    // @notice Returns the latest unit in the class
+    // @param class_id The class id to search within
+    // @returns the unit id if found
     func getLatestUnit(class_id: felt) -> (unit_id: felt) {
     }
 
+    // @notice Creates the metadata for a given class
+    // @param class_id The exact class id to create a metadata for
+    // @param metadata_id The id to store metadata in
+    // @param metadata The metadata to store
     func createClassMetadata(class_id: felt, metadata_id: felt, metadata: ClassMetadata) {
     }
 
+    // @notice Creates the metadata for a given class
+    // @param class_ids_len The length of class ids array
+    // @param class_ids The class ids to navigate
+    // @param metadata_ids_len The length of metadata ids array
+    // @param metadata_ids The metadata ids to navigate
+    // @param metadata_array_len The length of metadata array
+    // @param metadata_array The array with metadatas to store
     func createClassMetadataBatch(
             class_ids_len: felt, class_ids: felt*, metadata_ids_len: felt, metadata_ids: felt*,
             metadata_array_len: felt, metadata_array: ClassMetadata*

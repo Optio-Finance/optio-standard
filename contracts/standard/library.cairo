@@ -95,12 +95,12 @@ namespace OPTIO {
     }
 
     func transfer_from_batch{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        sender: felt,
-        recipient: felt,
-        transaction_index: felt,
-        transactions_len: felt,
-        transactions: Transaction*,
-    ) {
+            sender: felt,
+            recipient: felt,
+            transaction_index: felt,
+            transactions_len: felt,
+            transactions: Transaction*,
+        ) {
         if (transaction_index == transactions_len) {
             return ();
         }
@@ -130,7 +130,7 @@ namespace OPTIO {
             balance_recipient + transaction.amount,
         );
 
-        transfer_from(
+        transfer_from_batch(
             sender=sender,
             recipient=recipient,
             transaction_index=transaction_index + 1,
@@ -141,13 +141,13 @@ namespace OPTIO {
     }
 
     func transfer_allowance_from{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        caller: felt,
-        sender: felt,
-        recipient: felt,
-        transaction_index: felt,
-        transactions_len: felt,
-        transactions: Transaction*,
-    ) {
+            caller: felt,
+            sender: felt,
+            recipient: felt,
+            transaction_index: felt,
+            transactions_len: felt,
+            transactions: Transaction*,
+        ) {
         if (transaction_index == transactions_len) {
             return ();
         }
@@ -193,8 +193,8 @@ namespace OPTIO {
     }
 
     func issue{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        recipient: felt, transaction_index: felt, transactions_len: felt, transactions: Transaction*
-    ) {
+            recipient: felt, transaction_index: felt, transactions_len: felt, transactions: Transaction*
+        ) {
         if (transaction_index == transactions_len) {
             return ();
         }
@@ -220,8 +220,8 @@ namespace OPTIO {
     }
 
     func redeem{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        sender: felt, transaction_index: felt, transactions_len: felt, transactions: Transaction*
-    ) {
+            sender: felt, transaction_index: felt, transactions_len: felt, transactions: Transaction*
+        ) {
         if (transaction_index == transactions_len) {
             return ();
         }
@@ -247,8 +247,8 @@ namespace OPTIO {
     }
 
     func burn{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        sender: felt, transaction_index: felt, transactions_len: felt, transactions: Transaction*
-    ) {
+            sender: felt, transaction_index: felt, transactions_len: felt, transactions: Transaction*
+        ) {
         if (transaction_index == transactions_len) {
             return ();
         }
@@ -273,12 +273,12 @@ namespace OPTIO {
     }
 
     func approve{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        owner: felt,
-        spender: felt,
-        transaction_index: felt,
-        transactions_len: felt,
-        transactions: Transaction*,
-    ) {
+            owner: felt,
+            spender: felt,
+            transaction_index: felt,
+            transactions_len: felt,
+            transactions: Transaction*,
+        ) {
         if (transaction_index == transactions_len) {
             return ();
         }
@@ -297,22 +297,22 @@ namespace OPTIO {
     }
 
     func set_approval_for{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        owner: felt, operator: felt, approved: felt
-    ) {
+            owner: felt, operator: felt, approved: felt
+        ) {
         operator_approvals.write(owner, operator, approved);
         return ();
     }
 
     func create_class_metadata{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        class_id: felt, metadata_id: felt, metadata: ClassMetadata
-    ) {
+            class_id: felt, metadata_id: felt, metadata: ClassMetadata
+        ) {
         classMetadata.write(class_id, metadata_id, metadata);
         return ();
     }
 
     func create_class_metadata_batch{
-        syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
-    }(
+            syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+        }(
         index: felt,
         class_ids_len: felt,
         class_ids: felt*,
@@ -348,15 +348,15 @@ namespace OPTIO {
     }
 
     func create_unit_metadata{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        class_id: felt, unit_id: felt, metadata_id: felt, metadata: UnitMetadata
-    ) {
+            class_id: felt, unit_id: felt, metadata_id: felt, metadata: UnitMetadata
+        ) {
         unitMetadata.write(class_id, unit_id, metadata_id, metadata);
         return ();
     }
 
     func create_unit_metadata_batch{
-        syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
-    }(
+            syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+        }(
         index: felt,
         class_ids_len: felt,
         class_ids: felt*,
@@ -398,13 +398,13 @@ namespace OPTIO {
     }
 
     func create_class{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        index: felt,
-        class_id: felt,
-        metadata_ids_len: felt,
-        metadata_ids: felt*,
-        values_len: felt,
-        values: Values*,
-    ) {
+            index: felt,
+            class_id: felt,
+            metadata_ids_len: felt,
+            metadata_ids: felt*,
+            values_len: felt,
+            values: Values*,
+        ) {
         if (index == metadata_ids_len) {
             return ();
         }
