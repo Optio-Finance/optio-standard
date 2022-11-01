@@ -69,6 +69,10 @@ namespace IOptio {
     func getLatestUnit(class_id: felt) -> (unit_id: felt) {
     }
 
+    // @notice Creates the metadata for a given class
+    // @param class_id The exact class id to create a metadata for
+    // @param metadata_id The id to store metadata in
+    // @param metadata The metadata to store
     func createClassMetadata(class_id: felt, metadata_id: felt, metadata: ClassMetadata) {
     }
 
