@@ -76,6 +76,13 @@ namespace IOptio {
     func createClassMetadata(class_id: felt, metadata_id: felt, metadata: ClassMetadata) {
     }
 
+    // @notice Creates the metadata for a given class
+    // @param class_ids_len The length of class ids array
+    // @param class_ids The class ids to navigate
+    // @param metadata_ids_len The length of metadata ids array
+    // @param metadata_ids The metadata ids to navigate
+    // @param metadata_array_len The length of metadata array
+    // @param metadata_array The array with metadatas to store
     func createClassMetadataBatch(
             class_ids_len: felt, class_ids: felt*, metadata_ids_len: felt, metadata_ids: felt*,
             metadata_array_len: felt, metadata_array: ClassMetadata*
