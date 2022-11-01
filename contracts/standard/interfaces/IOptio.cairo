@@ -63,6 +63,9 @@ namespace IOptio {
     func isApprovedFor(owner: felt, operator: felt) -> (approved: felt) {
     }
 
+    // @notice Returns the latest unit in the class
+    // @param class_id The class id to search within
+    // @returns the unit id if found
     func getLatestUnit(class_id: felt) -> (unit_id: felt) {
     }
 
