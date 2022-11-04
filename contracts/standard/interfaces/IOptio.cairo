@@ -89,6 +89,11 @@ namespace IOptio {
         ) {
     }
 
+    // @notice Creates the metadata for a given unit
+    // @param class_id The length of unit ids array
+    // @param unit_id The unit id to store
+    // @param metadata_id The metadata id to store
+    // @param metadata The metadata to store
     func createUnitMetadata(class_id: felt, unit_id: felt, metadata_id: felt, metadata: UnitMetadata) {
     }
 
