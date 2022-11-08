@@ -97,6 +97,15 @@ namespace IOptio {
     func createUnitMetadata(class_id: felt, unit_id: felt, metadata_id: felt, metadata: UnitMetadata) {
     }
 
+    // @notice Creates the metadata for a batch of units
+    // @param class_ids_len The length of class ids array
+    // @param class_ids The class ids to navigate
+    // @param unit_ids_len The length of unit ids array
+    // @param unit_ids The unit ids to navigate
+    // @param metadata_ids_len The length of metadata ids array
+    // @param metadata_ids The metadata ids to navigate
+    // @param metadata_array_len The length of metadata array
+    // @param metadata_array The array with metadatas to store
     func createUnitMetadataBatch(
             class_ids_len: felt, class_ids: felt*, unit_ids_len: felt, unit_ids: felt*,
             metadata_ids_len: felt, metadata_ids: felt*,
