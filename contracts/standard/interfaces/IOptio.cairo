@@ -113,6 +113,12 @@ namespace IOptio {
         ) {
     }
 
+    // @notice Creates a class
+    // @param class_id The id of a new class, should be obtained prior to this action
+    // @param metadata_ids_len The length of metadata ids array
+    // @param metadata_ids The metadata ids to navigate
+    // @param values_len The length of an array containing values
+    // @param values The actual values to store
     func createClass(
             class_id: felt, metadata_ids_len: felt, metadata_ids: felt*, values_len: felt, values: Values*
         ) {
