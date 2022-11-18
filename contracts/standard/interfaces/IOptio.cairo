@@ -135,6 +135,10 @@ namespace IOptio {
         ) {
     }
 
+    // @notice Updates the latest unit for a given class
+    // @param class_id The id of a class
+    // @param latest_unit_id The latest id of the unit
+    // @param latest_unit_timestamp The Unix timestamp
     func updateClassLatestUnit(class_id: felt, latest_unit_id: felt, latest_unit_timestamp: felt) {
     }
 
