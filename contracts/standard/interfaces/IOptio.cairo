@@ -50,6 +50,10 @@ namespace IOptio {
     }
 
     // @notice Allows `spender` to withdraw tokens from `owner` up to the approved limit
+    // @param owner The address of tokens owner
+    // @param spender The address of tokens spender
+    // @param transactions_len The counter used for recursion
+    // @param transactions The set of transactions to be processed
     func approve(owner: felt, spender: felt, transactions_len: felt, transactions: Transaction*) {
     }
 
