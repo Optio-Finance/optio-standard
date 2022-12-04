@@ -58,6 +58,8 @@ namespace IOptio {
     }
 
     // @notice Allows to set or revoke `operator` approval to manage a caller's tokens
+    // @param operator The address of operator
+    // @param approved Either the address is allowed to manage tokens or not
     func setApprovalFor(operator: felt, approved: felt) {
     }
 
