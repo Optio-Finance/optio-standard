@@ -66,6 +66,7 @@ namespace IOptio {
     // @notice Returns the approval status of the `operator` for a certain `owner`
     // @param owner The address which is approving `spender` to operate over all tokens in all `owner` Units
     // @param operator The address which is going to be approved for operating over tokens
+    // @returns the allowance amount
     func isApprovedFor(owner: felt, operator: felt) -> (approved: felt) {
     }
 
@@ -159,12 +160,14 @@ namespace IOptio {
     // @param spender The address which is going to be allowed for spending tokens
     // @param class_id The unique ID of a particular Class
     // @param unit_id The unique ID of a particular Unit
+    // @returns The remaining allowance
     func allowance(owner: felt, spender: felt, class_id: felt, unit_id: felt) -> (remaining: felt) {
     }
 
     // @notice Returns the metamodel of a certain Class
     // @param class_id The unique ID of a particular Class
     // @param metadata_id The unique ID of a particular trait of the given Class
+    // @returns The class metadata
     func getClassMetadata(class_id: felt, metadata_id: felt) -> (classMetadata: ClassMetadata) {
     }
 
